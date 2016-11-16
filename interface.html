@@ -79,12 +79,12 @@
                   <div class="col-sm-8">
 
                     <div class="form-group">
-                    <div class="col-sm-12 control-label text-left">
-                      <label for="list-item-link-label-{{id}}">Button label</label>
-                    </div>
-                    <div class="col-sm-12">
-                      <input type="text" class="form-control list-item-link-label" id="list-item-link-label-{{id}}" name="list-item-link-label-{{id}}" placeholder="Enter button label" value="{{#if linkLabel}}{{~linkLabel~}}{{/if}}">
-                    </div>
+                      <div class="col-sm-12 control-label text-left">
+                        <label for="list-item-link-label-{{id}}">Button label</label>
+                      </div>
+                      <div class="col-sm-12">
+                        <input type="text" class="form-control list-item-link-label" id="list-item-link-label-{{id}}" name="list-item-link-label-{{id}}" placeholder="Enter button label" value="{{#if linkLabel}}{{~linkLabel~}}{{/if}}">
+                      </div>
                     </div>
 
                     <div class="btn btn-default list-item-set-link {{#if linkAction}} hidden{{/if}}">Add Link</div>
@@ -260,6 +260,15 @@
               <span class="help-block">The button will appear at the bottom and can be used to direct the user to a different screen.</span>
             </div>
             <div class="col-sm-8">
+              <div class="form-group">
+                <div class="col-sm-12 control-label text-left">
+                  <label for="list-item-link-label-{{id}}">Button label</label>
+                </div>
+                <div class="col-sm-12">
+                  <input type="text" class="form-control list-item-link-label" id="list-item-link-label-{{id}}" name="list-item-link-label-{{id}}" placeholder="Enter button label" value="{{#if linkLabel}}{{~linkLabel~}}{{/if}}">
+                </div>
+              </div>
+
               <div class="btn btn-default list-item-set-link">Add Link</div>
               <div class="btn btn-link text-danger link-remove hidden">Remove</div>
               <div class="add-link"></div>
