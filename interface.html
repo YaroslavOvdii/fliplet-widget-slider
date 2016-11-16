@@ -1,0 +1,273 @@
+<form class="form-horizontal">
+
+  <header>
+    <p>Configure your onboarding slider</p>
+    <a id="help_tip" href="#">Need help?</a>
+  </header>
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active" id="slides-control"><a href="#slides" aria-controls="slides" role="tab" data-toggle="tab">Slides</a></li>
+    <li role="presentation" id="slider-options-control"><a href="#slider-options" aria-controls="slider-options" role="tab" data-toggle="tab">Slider options</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane tab-pane-content active {{#unless items.length}}list-items-empty{{/unless}}" id="slides">
+      <div class="panel-group ui-sortable" id="accordion">
+
+        {{#each items}}
+        <div class="panel panel-default" data-id="{{id}}">
+          <div class="panel-heading ui-sortable-handle">
+            <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-{{id}}">
+              <div class="screen-reorder-handle">
+                <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
+              </div>
+              <span class="fa fa-chevron-down"></span>
+              <span class="panel-title-text">
+                {{#unless title}}
+                  Slider {{number}}
+                {{else}}
+                  {{~title~}}
+                {{/unless}}
+              </span>
+            </h4>
+            <a href="#"><span class="icon-delete fa fa-trash"></span></a>
+          </div>
+
+          <div id="collapse-{{id}}" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <div class="form-horizontal">
+
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label for="list-item-image-{{id}}">Top image</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="add-image-holder ">
+                      <div class="btn btn-default list-item-set-image add-image">{{#unless imageConf}}Add Image{{else}}Replace Image {{/unless}}</div>
+                      <div class="thumb-holder {{#unless imageConf}}hidden{{/unless}}">
+                        <div class="thumb-image"><img src="{{imageConf.thumbnail}}" /></div>
+                        <div class="btn btn-link text-danger image-remove">Remove Image</div>
+                      </div>
+                    </div>
+                    <div class="list-item-image"></div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label for="list-item-title-{{id}}">Title</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <input type="text" class="form-control list-item-title" id="list-item-title-{{id}}" name="list-item-title-{{id}}" placeholder="Enter title" value="{{#unless title}}Slider {{number}}{{else}}{{~title~}}{{/unless}}">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label for="list-item-desc-{{id}}">Description</label>
+                  </div>
+                  <div class="col-sm-8">
+                    <textarea class="form-control list-item-desc" id="list-item-desc-{{id}}" name="list-item-desc-{{id}}" rows="3" {{#unless description}}placeholder="Enter description">{{else}}>{{~description~}}{{/unless}}</textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4 control-label">
+                    <label for="list-item-link-{{id}}">Button</label>
+                    <span class="help-block">The button will appear at the bottom and can be used to direct the user to a different screen.</span>
+                  </div>
+                  <div class="col-sm-8">
+
+                    <div class="form-group">
+                    <div class="col-sm-12 control-label text-left">
+                      <label for="list-item-link-label-{{id}}">Button label</label>
+                    </div>
+                    <div class="col-sm-12">
+                      <input type="text" class="form-control list-item-link-label" id="list-item-link-label-{{id}}" name="list-item-link-label-{{id}}" placeholder="Enter button label" value="{{#if linkLabel}}{{~linkLabel~}}{{/if}}">
+                    </div>
+                    </div>
+
+                    <div class="btn btn-default list-item-set-link {{#if linkAction}} hidden{{/if}}">Add Link</div>
+                    <div class="btn btn-link text-danger link-remove {{#unless linkAction}} hidden {{/unless}}">Remove Link</div>
+                    <div class="add-link"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="panels-empty">
+        <p><strong>Create as many slides as you want</strong><br>Click the button below to get started</p>
+      </div>
+
+      <div class="controls clearfix">
+        <div class="btn-holder">
+          <div class="btn btn-default new-list-item">Add new slide</div>
+        </div>
+        <div class="btn btn-link expand-items">Expand/Collapse All</div>
+      </div>
+      <div class="controls controls-sticky">
+        <div  class="btn-holder">
+          <div class="btn btn-default new-list-item">Add new slide</div>
+        </div>
+        <div class="btn btn-link expand-items">Expand/Collapse All</div>
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane tab-pane-content" id="slider-options">
+      <p>Enable <em>Swipe to Save</em> to let your users swipe on any list item to save/bookmark it for later.</p>
+
+      <div class="form-group">
+        <div class="col-sm-4 control-label">
+          <label for="enable-animation">Do you want to animate the content of each slide?</label>
+        </div>
+        <div class="col-sm-8">
+          <div class="radio-buttons clearfix">
+            <div class="radio">
+              <input type="radio" id="enable-animation-yes" name="enable_animation" value="enable-animation-yes" {{#if animationEnabled}}checked{{/if}}>
+              <label for="enable-animation-yes">
+                Yes
+              </label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="enable-animation-no" name="enable_animation" value="enable-animation-no" {{#if animationEnabled}}{{else}}checked{{/if}}>
+              <label for="enable-animation-no">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-4 control-label">
+          <label for="enable-navigation">Do you want to show navigation buttons?</label>
+          <span class="help-block">i.e.: Previous &amp; Next</span>
+        </div>
+        <div class="col-sm-8">
+          <div class="radio-buttons clearfix">
+            <div class="radio">
+              <input type="radio" id="enable-navigation-yes" name="enable_navigation" value="enable-navigation-yes" {{#if navigationEnabled}}checked{{/if}}>
+              <label for="enable-navigation-yes">
+                Yes
+              </label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="enable-navigation-no" name="enable_navigation" value="enable-navigation-no" {{#if navigationEnabled}}{{else}}checked{{/if}}>
+              <label for="enable-navigation-no">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-4 control-label">
+          <label for="enable-skip">Do you want to configure a <em>Skip</em> button?</label>
+        </div>
+        <div class="col-sm-8">
+          <div class="radio-buttons clearfix">
+            <div class="radio">
+              <input type="radio" id="enable-skip-yes" name="enable_skip" value="enable-skip-yes" {{#if skipEnabled}}checked{{/if}}>
+              <label for="enable-skip-yes">
+                Yes
+              </label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="enable-skip-no" name="enable_skip" value="enable-skip-no" {{#if skipEnabled}}{{else}}checked{{/if}}>
+              <label for="enable-skip-no">
+                No
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group clearfix" id="skip-link">
+        <div class="col-sm-4 control-label">
+          <label for="skip-link">Configure the Skip button</label>
+        </div>
+        <div class="col-sm-8">
+          <div class="btn btn-default set-skip-link {{#if skipLinkAction}} hidden{{/if}}">Add Link</div>
+          <div class="btn btn-link text-danger skip-link-remove {{#unless skipLinkAction}} hidden {{/unless}}">Remove Link</div>
+          <div class="add-skip-link"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</form>
+
+<template id="template-panel">
+  <div class="panel panel-default" data-id="\{{id}}">
+    <div class="panel-heading ui-sortable-handle">
+      <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-\{{id}}">
+        <div class="screen-reorder-handle">
+          <i class="fa fa-ellipsis-v"></i><i class="fa fa-ellipsis-v"></i>
+        </div>
+        <span class="fa fa-chevron-down"></span><span class="panel-title-text">Slider \{{number}}</span>
+      </h4>
+      <a href="#"><span class="icon-delete fa fa-trash"></span></a>
+    </div>
+    <div id="collapse-\{{id}}" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <div class="form-horizontal">
+
+          <div class="form-group">
+            <div class="col-sm-4 control-label">
+              <label for="list-item-image-\{{id}}">Top image</label>
+            </div>
+            <div class="col-sm-8">
+              <div class="add-image-holder ">
+                <div class="btn btn-default list-item-set-image add-image">Add Image</div>
+                <div class="thumb-holder hidden">
+                  <div class="thumb-image"><img src="" /></div>
+                  <div class="btn btn-link text-danger image-remove">Remove Image</div>
+                </div>
+              </div>
+              <div class="list-item-image"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-4 control-label">
+              <label for="list-item-title-\{{id}}">Title</label>
+            </div>
+            <div class="col-sm-8">
+              <input type="text" class="form-control list-item-title" id="list-item-title-\{{id}}" name="list-item-title-\{{id}}" placeholder="Enter title" value="Slider \{{number}}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-4 control-label">
+              <label for="list-item-desc-\{{id}}">Description</label>
+            </div>
+            <div class="col-sm-8">
+              <textarea class="form-control list-item-desc" id="list-item-desc-\{{id}}" name="list-item-desc-\{{id}}" placeholder="Enter description" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-4 control-label">
+              <label for="list-item-link-\{{id}}">Button</label>
+              <span class="help-block">The button will appear at the bottom and can be used to direct the user to a different screen.</span>
+            </div>
+            <div class="col-sm-8">
+              <div class="btn btn-default list-item-set-link">Add Link</div>
+              <div class="btn btn-link text-danger link-remove hidden">Remove</div>
+              <div class="add-link"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -1,0 +1,46 @@
+{
+  "name": "Onboarding Slider",
+  "package": "com.fliplet.onboarding-slider",
+  "version": "1.0.0",
+  "icon": "img/icon.png",
+  "tags": ["type:component", "category:onboarding"],
+  "provider_only": false,
+  "html_tag": "div",
+  "providers": [
+    "com.fliplet.link",
+    "com.fliplet.image-manager"
+  ],
+  "interface": {
+    "dependencies": [
+      "fliplet-core",
+      "fliplet-studio-ui",
+      "jquery-ui",
+      "lodash",
+      "handlebars",
+      "bootstrap"
+    ],
+    "assets": [
+      "js/swiper.min.js",
+      "js/interface.js",
+      "css/swiper.min.css",
+      "css/interface.css"
+    ]
+  },
+  "build": {
+    "dependencies": [
+      "fliplet-core",
+      "bootstrap-css",
+      "font-awesome",
+      "lodash"
+    ],
+    "assets": [
+      "js/swiper.min.js",
+      "js/build.js",
+      "css/swiper.min.css",
+      "css/build.css"
+    ]
+  },
+  "references": [
+    "items.$.linkAction.page:page"
+  ]
+}
