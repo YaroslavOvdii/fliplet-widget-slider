@@ -113,13 +113,12 @@
 	background: #4DD0E1;
 }
 
+.swiper-button-next,
 .swiper-button-prev {
 	background: none;
 	position: absolute;
 	top: 50%;
-	left: 0;
-	width: 18px;
-	float: left;
+	width: 33px;
 	padding: 0;
 	height: 48px;
 	margin: -24px 0 0;
@@ -127,22 +126,17 @@
 	z-index: 10;
 	line-height: 48px;
 	font-size: 48px;
+	color: #999999;
+}
+
+.swiper-button-prev {
+	left: 0;
+	text-align: left;
 }
 
 .swiper-button-next {
-	background: none;
-	position: absolute;
-	top: 50%;
 	right: 0;
-	width: 18px;
-	float: left;
-	padding: 0;
-	height: 48px;
-	margin: -24px 0 0;
-	cursor: default;
-	z-index: 10;
-	line-height: 48px;
-	font-size: 48px;
+	text-align: right;
 }
 
 .swiper-button-next,
