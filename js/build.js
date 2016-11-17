@@ -29,8 +29,8 @@ $('[data-onboarding-id]').each(function(){
 
   	pagination: '.swiper-pagination',
     paginationClickable: true,
-    nextButton: '.swiper-button-next span',
-    prevButton: '.swiper-button-prev span',
+    nextButton: '.swiper-button-next',
+    prevButton: '.swiper-button-prev',
     grabCursor: true
   });
 
