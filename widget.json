@@ -1,6 +1,6 @@
 {
-  "name": "Onboarding Slider",
-  "package": "com.fliplet.onboarding-slider",
+  "name": "Slider",
+  "package": "com.fliplet.slider",
   "version": "1.0.0",
   "icon": "img/icon.png",
   "tags": ["type:component", "category:onboarding"],
