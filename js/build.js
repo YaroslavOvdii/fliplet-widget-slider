@@ -19,19 +19,29 @@ $('.btn[data-slide-button-id]').click(function (event) {
   }
 });
 
-$('[data-onboarding-id]').each(function(){
+function init(){
+  $('[data-onboarding-id]').each(function(){
 
-  var swiperElement = $(this).find('.swiper-container');
-  var swiper = new Swiper( swiperElement, {
-    direction: 'horizontal',
-    loop: false,
-    autoHeight: true,
+    var swiperElement = $(this).find('.swiper-container');
+    var swiper = new Swiper( swiperElement, {
+      direction: 'horizontal',
+      loop: false,
+      autoHeight: true,
 
-  	pagination: '.swiper-pagination',
-    paginationClickable: true,
-    nextButton: '.swiper-button-next',
-    prevButton: '.swiper-button-prev',
-    grabCursor: true
+      pagination: '.swiper-pagination',
+      paginationClickable: true,
+      nextButton: '.swiper-button-next',
+      prevButton: '.swiper-button-prev',
+      grabCursor: true
+    });
+
   });
+}
+var debounceLoad = _.debounce(init, 500);
 
+Fliplet.Studio.onEvent(function (event) {
+  if (event.detail.event === 'reload-widget-instance') {
+    debounceLoad();
+  }
 });
+init();
