@@ -15,9 +15,9 @@
       "fliplet-core",
       "fliplet-studio-ui",
       "jquery-ui",
-      "lodash",
+      "bootstrap",
       "handlebars",
-      "bootstrap"
+      "lodash"
     ],
     "assets": [
       "js/swiper.min.js",
