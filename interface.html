@@ -23,11 +23,7 @@
               </div>
               <span class="fa fa-chevron-down"></span>
               <span class="panel-title-text">
-                {{#unless title}}
-                  Slider {{number}}
-                {{else}}
-                  {{~title~}}
-                {{/unless}}
+                {{~title~}}
               </span>
             </h4>
             <a href="#"><span class="icon-delete fa fa-trash"></span></a>
@@ -58,7 +54,7 @@
                     <label for="list-item-title-{{id}}">Title</label>
                   </div>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control list-item-title" id="list-item-title-{{id}}" name="list-item-title-{{id}}" placeholder="Enter title" value="{{#unless title}}Slider {{number}}{{else}}{{~title~}}{{/unless}}">
+                    <input type="text" class="form-control list-item-title" id="list-item-title-{{id}}" name="list-item-title-{{id}}" {{#unless title}}placeholder="Enter title" value="">{{else}}placeholder="Enter title" value="{{~title~}}">{{/unless}}
                   </div>
                 </div>
 
@@ -130,13 +126,13 @@
         <div class="col-sm-8">
           <div class="radio-buttons clearfix">
             <div class="radio">
-              <input type="radio" id="enable-animation-yes" name="enable_animation" value="enable-animation-yes" {{#if animationEnabled}}checked{{/if}}>
+              <input type="radio" id="enable-animation-yes" name="enable_animation" value="enable-animation-yes">
               <label for="enable-animation-yes">
                 Yes
               </label>
             </div>
             <div class="radio">
-              <input type="radio" id="enable-animation-no" name="enable_animation" value="enable-animation-no" {{#if animationEnabled}}{{else}}checked{{/if}}>
+              <input type="radio" id="enable-animation-no" name="enable_animation" value="enable-animation-no">
               <label for="enable-animation-no">
                 No
               </label>
@@ -153,13 +149,13 @@
         <div class="col-sm-8">
           <div class="radio-buttons clearfix">
             <div class="radio">
-              <input type="radio" id="enable-navigation-yes" name="enable_navigation" value="enable-navigation-yes" {{#if navigationEnabled}}checked{{/if}}>
+              <input type="radio" id="enable-navigation-yes" name="enable_navigation" value="enable-navigation-yes">
               <label for="enable-navigation-yes">
                 Yes
               </label>
             </div>
             <div class="radio">
-              <input type="radio" id="enable-navigation-no" name="enable_navigation" value="enable-navigation-no" {{#if navigationEnabled}}{{else}}checked{{/if}}>
+              <input type="radio" id="enable-navigation-no" name="enable_navigation" value="enable-navigation-no">
               <label for="enable-navigation-no">
                 No
               </label>
@@ -176,13 +172,13 @@
         <div class="col-sm-8">
           <div class="radio-buttons clearfix">
             <div class="radio">
-              <input type="radio" id="enable-skip-yes" name="enable_skip" value="enable-skip-yes" {{#if skipEnabled}}checked{{/if}}>
+              <input type="radio" id="enable-skip-yes" name="enable_skip" value="enable-skip-yes">
               <label for="enable-skip-yes">
                 Yes
               </label>
             </div>
             <div class="radio">
-              <input type="radio" id="enable-skip-no" name="enable_skip" value="enable-skip-no" {{#if skipEnabled}}{{else}}checked{{/if}}>
+              <input type="radio" id="enable-skip-no" name="enable_skip" value="enable-skip-no">
               <label for="enable-skip-no">
                 No
               </label>

@@ -1,407 +1,466 @@
 // VARS
 var widgetId = Fliplet.Widget.getDefaultId();
 var data = Fliplet.Widget.getData() || { items:[] },
-    linkPromises = [];
+    linkPromises = [],
+    imageProvider;
 
+// DEFAULTS
 data.items = data.items || [];
 
-_.forEach(data.items,function (item){
-  if(_.isObject(item.linkAction)) {
-    initItemLinkProvider(item);
+var FlSlider = (function() {
+
+  var accordionCollapsed = false;
+
+  var $accordionContainer = $('#accordion');
+
+
+  function makeid(length)
+  {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < length; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
   }
-});
 
-if(_.isObject(data.skipLinkAction)) {
-  initSkipLinkProvider();
-}
+  // this reference
+  var _this;
 
-var listLength = data.items.length + 1;
-var accordionCollapsed = false;
+  // Constructor
+  function FlSlider( data ) {
+    _this = this;
 
-var $accordionContainer = $('#accordion');
-var templates = {
-  panel: template('panel')
-};
+    _.forEach(data.items,function (item){
+      if(_.isObject(item.linkAction)) {
+        this.initItemLinkProvider(item);
+      }
+    });
 
-enableAnimation();
-enableNavigation();
-enableSkipButton();
-checkPanelLength();
+    if(_.isObject(data.skipLinkAction)) {
+      this.initSkipLinkProvider();
+    }
 
-setTimeout (function() {
-  // SORTING PANELS
-  $('.panel-group').sortable({
-    handle: ".panel-heading",
-    cancel: ".icon-delete",
-    tolerance: 'pointer',
-    revert: 150,
-    placeholder: 'panel panel-default placeholder tile',
-    cursor: '-webkit-grabbing; -moz-grabbing;',
-    axis: 'y',
-    start: function(event, ui) {
-      $('.panel-collapse.in').collapse('hide');
-      ui.item.addClass('focus').css('height', ui.helper.find('.panel-heading').outerHeight() + 2);
-      $('.panel').not(ui.item).addClass('faded');
-    },
-    stop: function(event, ui) {
-      ui.item.removeClass('focus');
+    this.listLength = data.items.length + 1;
+    this.$tabcontent = $('.tab-content');
+    Handlebars.panelTemplate = Handlebars.compile($('#template-panel').html());
 
-      var sortedIds = $( ".panel-group" ).sortable( "toArray" ,{attribute: 'data-id'});
-      data.items = _.sortBy(data.items, function(item){
-        return sortedIds.indexOf(item.id);
+    this.checkPanelLength();
+    this.setupSortable();
+    this.attachObservers();
+    this.loadAnimationToggle();
+    this.loadNavigationToggle();
+    this.loadSkipToggle();
+  }
+
+  FlSlider.prototype = {
+
+    // Public functions
+    constructor : FlSlider,
+    setupSortable : function() {
+      var $sortable = $('.panel-group').sortable({
+        handle: ".panel-heading",
+        cancel: ".icon-delete",
+        tolerance: 'pointer',
+        revert: 150,
+        placeholder: 'panel panel-default placeholder tile',
+        cursor: '-webkit-grabbing; -moz-grabbing;',
+        axis: 'y',
+        start: function(event, ui) {
+          $('.panel-collapse.in').collapse('hide');
+          ui.item.addClass('focus').css('height', ui.helper.find('.panel-heading').outerHeight() + 2);
+          $('.panel').not(ui.item).addClass('faded');
+        },
+        stop: function(event, ui) {
+          ui.item.removeClass('focus');
+
+          var sortedIds = $( ".panel-group" ).sortable( "toArray" ,{attribute: 'data-id'});
+          data.items = _.sortBy(data.items, function(item){
+            return sortedIds.indexOf(item.id);
+          });
+          save();
+          $('.panel').not(ui.item).removeClass('faded');
+        },
+        sort: function(event, ui) {
+          $('.panel-group').sortable('refresh');
+          $('.tab-content').trigger('scroll');
+        }
       });
-      save();
-      $('.panel').not(ui.item).removeClass('faded');
+      $('form.form-horizontal').trigger('scroll');
     },
-    sort: function(event, ui) {
-      $('.panel-group').sortable('refresh');
-      $('.tab-content').trigger('scroll');
-    }
-  });
-  $('form.form-horizontal').trigger('scroll');
-}, 1000);
 
-// EVENTS
-$(".tab-content")
-  .on('click', '.icon-delete', function() {
+    loadAnimationToggle : function() {
+      if (typeof data.animationEnabled != "undefined") {
+        if (data.animationEnabled) {
+          $('#enable-animation-yes').prop("checked", true);
+        } else {
+          $('#enable-animation-no').prop("checked", true);
+        }
+      } else {
+        $('#enable-animation-yes').prop("checked", true);
+      }
+      _this.enableAnimation();
+    },
 
-    var $item = $(this).closest("[data-id], .panel"),
-        id = $item.data('id');
+    loadNavigationToggle : function() {
+      if (typeof data.navigationEnabled != "undefined") {
+        if (data.navigationEnabled) {
+          $('#enable-navigation-yes').prop("checked", true);
+        } else {
+          $('#enable-navigation-no').prop("checked", true);
+        }
+      } else {
+        $('#enable-navigation-no').prop("checked", true);
+      }
+      _this.enableNavigation();
+    },
 
-    _.remove(data.items, {id: id});
-    _.remove(linkPromises,{id: id});
+    loadSkipToggle : function() {
+      if (typeof data.skipEnabled != "undefined") {
+        if (data.skipEnabled) {
+          $('#enable-skip-yes').prop("checked", true);
+        } else {
+          $('#enable-skip-no').prop("checked", true);
+        }
+      } else {
+        $('#enable-skip-no').prop("checked", true);
+      }
+      _this.enableSkipButton();
+    },
 
-    $(this).parents('.panel').remove();
-    checkPanelLength();
-    listLength--;
-    save();
+    enableAnimation : function() {
+      if ($('#enable-animation-yes').is(':checked')) {
+        data.animationEnabled = true;
+      } else if ($('#enable-animation-no').is(':checked')) {
+        data.animationEnabled = false;
+      }
+    },
 
-  })
-  .on('click', '.add-image', function() {
+    enableNavigation : function() {
+      if ($('#enable-navigation-yes').is(':checked')) {
+        data.navigationEnabled = true;
+      } else if ($('#enable-navigation-no').is(':checked')) {
+        data.navigationEnabled = false;
+      }
+    },
 
-    var $item = $(this).closest("[data-id], .panel"),
-        id = $item.data('id'),
-        item = _.find(data.items, {id: id});
+    enableSkipButton : function() {
+      if ($('#enable-skip-yes').is(':checked')) {
+        $('#skip-link').addClass('show');
+        data.skipEnabled = true;
+      } else if ($('#enable-skip-no').is(':checked')) {
+        $('#skip-link').removeClass('show');
+        data.skipEnabled = false;
+      }
+    },
 
-    initImageProvider(item);
+    initItemLinkProvider : function(item) {
 
-    $(this).text('Replace image');
-    if ( $(this).siblings('.thumb-holder').hasClass('hidden') ) {
-      $(this).siblings('.thumb-holder').removeClass('hidden');
-    }
-  })
-  .on('click', '.image-remove', function() {
+      item.linkAction = item.linkAction || {};
+      item.linkAction.provId = item.id;
 
-    var $item = $(this).closest("[data-id], .panel"),
-        id = $item.data('id'),
-        item = _.find(data.items, {id: id});
+      var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
+        // If provided, the iframe will be appended here,
+        // otherwise will be displayed as a full-size iframe overlay
+        selector: '[data-id="' + item.id + '"] .add-link',
+        // Also send the data I have locally, so that
+        // the interface gets repopulated with the same stuff
+        data: item.linkAction,
+        // Events fired from the provider
+        onEvent: function (event, data) {
+          if (event === 'interface-validate') {
+            Fliplet.Widget.toggleSaveButton(data.isValid === true);
+          }
+        },
+        closeOnSave: false
+      });
 
-    item.imageConf = null;
-    $(this).parents('.add-image-holder').find('.add-image').text('Add image');
-    $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
-    save();
-  })
-  .on('click', '.list-item-set-link', function() {
+      linkActionProvider.then(function (data) {
+        item.linkAction = data ? data.data: {};
+        return Promise.resolve();
+      });
 
-    var $item = $(this).closest("[data-id], .panel"),
-        id = $item.data('id'),
-        item = _.find(data.items, {id: id});
+      linkActionProvider.id = item.id;
+      linkPromises.push(linkActionProvider);
+    },
 
-    initItemLinkProvider(item);
+    initSkipLinkProvider : function() {
 
-    $(this).siblings().removeClass('hidden');
-    $(this).addClass('hidden');
-    $(this).siblings('.link-remove').show();
-    save();
+      data.skipLinkAction = data.skipLinkAction || {};
 
-  })
-  .on('click', '.set-skip-link', function() {
+      var skipLinkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
+        // If provided, the iframe will be appended here,
+        // otherwise will be displayed as a full-size iframe overlay
+        selector: '.add-skip-link',
+        // Also send the data I have locally, so that
+        // the interface gets repopulated with the same stuff
+        data: data.skipLinkAction,
+        // Events fired from the provider
+        onEvent: function (event, data) {
+          if (event === 'interface-validate') {
+            Fliplet.Widget.toggleSaveButton(data.isValid === true);
+          }
+        },
+        closeOnSave: false
+      });
 
-    initSkipLinkProvider();
+      skipLinkActionProvider.then(function (result) {
+        data.skipLinkAction = result ? result.data: {};
+        return Promise.resolve();
+      });
 
-    $(this).siblings().removeClass('hidden');
-    $(this).addClass('hidden');
-    $(this).siblings('.link-remove').show();
-    save();
+      skipLinkActionProvider.id = data.id;
+      linkPromises.push(skipLinkActionProvider);
+    },
 
-  })
-  .on('click', '.link-remove', function() {
-    var $item = $(this).closest("[data-id], .panel"),
-        id = $item.data('id'),
-        item = _.find(data.items, {id: id});
+    initImageProvider : function(item) {
+      imageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
+        // Also send the data I have locally, so that
+        // the interface gets repopulated with the same stuff
+        data: item.imageConf,
+        // Events fired from the provider
+        onEvent: function (event, data) {
+          if (event === 'interface-validate') {
+            Fliplet.Widget.toggleSaveButton(data.isValid === true);
+          }
+        },
+        single: true,
+        type: 'image'
+      });
 
-    _.remove(linkPromises,{id: id});
-    $('[data-id="' + item.id + '"] .add-link').empty();
-    item.linkAction = null;
-    $(this).addClass('hidden');
-    $(this).siblings('.list-item-set-link').removeClass('hidden');
-    save();
-  })
-  .on('click', '.skip-link-remove', function() {
-    _.remove(linkPromises,{id: data.id});
-    $('.add-skip-link').empty();
-    data.skipLinkAction = null;
-    $(this).addClass('hidden');
-    $(this).siblings('.set-skip-link').removeClass('hidden');
-    save();
-  })
-  .on('keyup change blur paste', '.list-item-title', function() {
-    var $listItem = $(this).parents('.panel');
-    setListItemTitle($listItem.index(), $(this).val());
+      Fliplet.Widget.toggleCancelButton(false);
 
-    debounceSave();
-  }).on('keyup change blur paste', '.list-item-desc', function() {
-    debounceSave();
-  })
-  .on('keyup change blur paste', '.list-item-link-label', function() {
-    debounceSave();
-  })
-  .on('click', '.expand-items', function() {
-    var $panelCollapse = $('.panel-collapse.in');
-    // Update accordionCollapsed if all panels are collapsed/expanded
-    if (!$panelCollapse.length) {
-      accordionCollapsed = true;
-    } else if ($panelCollapse.length == $('.panel-collapse').length) {
+      window.addEventListener('message', function(event) {
+        if (event.data === 'cancel-button-pressed') {
+          Fliplet.Widget.toggleCancelButton(true);
+          imageProvider.close();
+          if(_.isEmpty(item.imageConf)) {
+            $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
+            $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
+          }
+        }
+      });
+
+      Fliplet.Studio.emit('widget-save-label-update', {
+          text: 'Select & Save'
+      });
+
+      imageProvider.then(function (data) {
+        if(data.data) {
+          item.imageConf = data.data;
+          $('[data-id="' + item.id + '"] .thumb-image img').attr("src",data.data.thumbnail);
+          save();
+        }
+        imageProvider = null;
+        Fliplet.Studio.emit('widget-save-label-reset');
+        return Promise.resolve();
+      });
+    },
+
+    expandAccordion : function(){
       accordionCollapsed = false;
-    }
+      $('.panel-collapse').collapse('show');
+    },
 
-    if (accordionCollapsed) {
-      expandAccordion();
-    } else {
-      collapseAccordion();
-    }
-  })
-  .on('click', '.new-list-item', function() {
+    collapseAccordion : function(){
+      accordionCollapsed = true;
+      $('.panel-collapse').collapse('hide');
+    },
 
-    var item ={};
-    item.id = makeid(8);
-    item.number = listLength++;
-    item.linkAction = null;
-    item.description = "";
-    data.items.push(item);
+    setListItemTitle : function(index, title) {
+      $('#accordion').find('.panel:eq(' + index + ') .panel-title-text').html(title);
+    },
 
-    addListItem(item);
+    addListItem : function(data) {
+      var $newPanel = $(Handlebars.panelTemplate(data));
+      $accordionContainer.append($newPanel);
 
-    checkPanelLength();
-    save();
+      $newPanel.find('.form-control:eq(0)').select();
+      $('form.form-horizontal').stop().animate({
+        scrollTop: $('.tab-content').height()
+      }, 300, function(){
+        $('form.form-horizontal').trigger('scroll');
+      });
+    },
 
-  })
-  .on('show.bs.collapse', '.panel-collapse', function() {
-    $(this).siblings('.panel-heading').find('.fa-chevron-right').removeClass('fa-chevron-right').addClass('fa-chevron-down');
-  })
-  .on('hide.bs.collapse', '.panel-collapse', function() {
-    $(this).siblings('.panel-heading').find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-right');
-  })
-  .on('shown.bs.collapse hidden.bs.collapse', '.panel-collapse', function() {
-    $('.tab-content').trigger('scroll');
-  })
-  .on('change', 'input[name="enable_animation"]:radio', function() {
-    enableAnimation();
-  })
-  .on('change', 'input[name="enable_navigation"]:radio', function() {
-    enableNavigation();
-  })
-  .on('change', 'input[name="enable_skip"]:radio', function() {
-    enableSkipButton();
-  });
-
-$('#help_tip').on('click', function() {
-  alert("During beta, please use live chat and let us know what you need help with.");
-});
-
-var contentHeight = $('body > .form-horizontal').outerHeight();
-var tabPaneTopPadding = 78;
-
-$('body > .form-horizontal').scroll(function(event) {
-  var tabContentScrollPos = Math.abs($('.tab-pane-content').position().top - tabPaneTopPadding);
-  var tabPaneHeight = tabPaneTopPadding + $('.tab-pane-content').height();
-
-  if (tabPaneHeight - tabContentScrollPos > contentHeight) {
-    $('body').addClass('controls-sticky-on');
-  } else {
-    $('body').removeClass('controls-sticky-on');
-  }
-});
-
-// FUNCTIONS
-function enableAnimation() {
-  if ($('#enable-animation-yes').is(':checked')) {
-    data.animationEnabled = true;
-  } else if ($('#enable-animation-no').is(':checked')) {
-    data.animationEnabled = false;
-  }
-}
-
-function enableNavigation() {
-  if ($('#enable-navigation-yes').is(':checked')) {
-    data.navigationEnabled = true;
-  } else if ($('#enable-navigation-no').is(':checked')) {
-    data.navigationEnabled = false;
-  }
-}
-
-function enableSkipButton() {
-  if ($('#enable-skip-yes').is(':checked')) {
-    $('#skip-link').addClass('show');
-    data.skipEnabled = true;
-  } else if ($('#enable-skip-no').is(':checked')) {
-    $('#skip-link').removeClass('show');
-    data.skipEnabled = false;
-  }
-}
-
-function initItemLinkProvider(item){
-
-  item.linkAction = item.linkAction || {};
-  item.linkAction.provId = item.id;
-
-  var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
-    // If provided, the iframe will be appended here,
-    // otherwise will be displayed as a full-size iframe overlay
-    selector: '[data-id="' + item.id + '"] .add-link',
-    // Also send the data I have locally, so that
-    // the interface gets repopulated with the same stuff
-    data: item.linkAction,
-    // Events fired from the provider
-    onEvent: function (event, data) {
-      if (event === 'interface-validate') {
-        Fliplet.Widget.toggleSaveButton(data.isValid === true);
+    checkPanelLength : function() {
+      if ( $('.panel').length ) {
+        $('#slides').removeClass('list-items-empty');
+      } else {
+        $('#slides').addClass('list-items-empty');
       }
     },
-    closeOnSave: false
-  });
 
-  linkActionProvider.then(function (data) {
-    item.linkAction = data ? data.data: {};
-    return Promise.resolve();
-  });
+    attachObservers : function(){
+      _this.$tabcontent
+        .on('click', '.icon-delete', function() {
 
-  linkActionProvider.id = item.id;
-  linkPromises.push(linkActionProvider);
-}
+          var $item = $(this).closest("[data-id], .panel"),
+              id = $item.data('id');
 
-function initSkipLinkProvider(){
+          _.remove(data.items, {id: id});
+          _.remove(linkPromises,{id: id});
 
-  data.skipLinkAction = data.skipLinkAction || {};
+          $(this).parents('.panel').remove();
+          _this.checkPanelLength();
+          _this.listLength--;
+          save();
 
-  var skipLinkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
-    // If provided, the iframe will be appended here,
-    // otherwise will be displayed as a full-size iframe overlay
-    selector: '.add-skip-link',
-    // Also send the data I have locally, so that
-    // the interface gets repopulated with the same stuff
-    data: data.skipLinkAction,
-    // Events fired from the provider
-    onEvent: function (event, data) {
-      if (event === 'interface-validate') {
-        Fliplet.Widget.toggleSaveButton(data.isValid === true);
-      }
-    },
-    closeOnSave: false
-  });
+        })
+        .on('click', '.add-image', function() {
 
-  skipLinkActionProvider.then(function (result) {
-    data.skipLinkAction = result ? result.data: {};
-    return Promise.resolve();
-  });
+          var $item = $(this).closest("[data-id], .panel"),
+              id = $item.data('id'),
+              item = _.find(data.items, {id: id});
 
-  skipLinkActionProvider.id = data.id;
-  linkPromises.push(skipLinkActionProvider);
-}
+          _this.initImageProvider(item);
 
-var imageProvider;
-function initImageProvider(item){
-  imageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
-    // Also send the data I have locally, so that
-    // the interface gets repopulated with the same stuff
-    data: item.imageConf,
-    // Events fired from the provider
-    onEvent: function (event, data) {
-      if (event === 'interface-validate') {
-        Fliplet.Widget.toggleSaveButton(data.isValid === true);
-      }
-    },
-    single: true,
-    type: 'image'
-  });
+          $(this).text('Replace image');
+          if ( $(this).siblings('.thumb-holder').hasClass('hidden') ) {
+            $(this).siblings('.thumb-holder').removeClass('hidden');
+          }
+        })
+        .on('click', '.image-remove', function() {
 
-  Fliplet.Widget.toggleCancelButton(false);
+          var $item = $(this).closest("[data-id], .panel"),
+              id = $item.data('id'),
+              item = _.find(data.items, {id: id});
 
-  window.addEventListener('message', function(event) {
-    if (event.data === 'cancel-button-pressed') {
-      Fliplet.Widget.toggleCancelButton(true);
-      imageProvider.close();
-      if(_.isEmpty(item.imageConf)) {
-        $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
-        $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
-      }
+          item.imageConf = null;
+          $(this).parents('.add-image-holder').find('.add-image').text('Add image');
+          $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
+          save();
+        })
+        .on('click', '.list-item-set-link', function() {
+
+          var $item = $(this).closest("[data-id], .panel"),
+              id = $item.data('id'),
+              item = _.find(data.items, {id: id});
+
+          _this.initItemLinkProvider(item);
+
+          $(this).siblings().removeClass('hidden');
+          $(this).addClass('hidden');
+          $(this).siblings('.link-remove').show();
+          save();
+
+        })
+        .on('click', '.set-skip-link', function() {
+
+          _this.initSkipLinkProvider();
+
+          $(this).siblings().removeClass('hidden');
+          $(this).addClass('hidden');
+          $(this).siblings('.link-remove').show();
+          save();
+
+        })
+        .on('click', '.link-remove', function() {
+          var $item = $(this).closest("[data-id], .panel"),
+              id = $item.data('id'),
+              item = _.find(data.items, {id: id});
+
+          _.remove(linkPromises,{id: id});
+          $('[data-id="' + item.id + '"] .add-link').empty();
+          item.linkAction = null;
+          $(this).addClass('hidden');
+          $(this).siblings('.list-item-set-link').removeClass('hidden');
+          save();
+        })
+        .on('click', '.skip-link-remove', function() {
+          _.remove(linkPromises,{id: data.id});
+          $('.add-skip-link').empty();
+          data.skipLinkAction = null;
+          $(this).addClass('hidden');
+          $(this).siblings('.set-skip-link').removeClass('hidden');
+          save();
+        })
+        .on('keyup change blur paste', '.list-item-title', function() {
+          var $listItem = $(this).parents('.panel');
+          _this.setListItemTitle($listItem.index(), $(this).val());
+
+          debounceSave();
+        }).on('keyup change blur paste', '.list-item-desc', function() {
+          debounceSave();
+        })
+        .on('keyup change blur paste', '.list-item-link-label', function() {
+          debounceSave();
+        })
+        .on('click', '.expand-items', function() {
+          var $panelCollapse = $('.panel-collapse.in');
+          // Update accordionCollapsed if all panels are collapsed/expanded
+          if (!$panelCollapse.length) {
+            accordionCollapsed = true;
+          } else if ($panelCollapse.length == $('.panel-collapse').length) {
+            accordionCollapsed = false;
+          }
+
+          if (accordionCollapsed) {
+            _this.expandAccordion();
+          } else {
+            _this.collapseAccordion();
+          }
+        })
+        .on('click', '.new-list-item', function() {
+
+          var item ={};
+          item.id = makeid(8);
+          item.number = _this.listLength++;
+          item.linkAction = null;
+          item.description = "";
+          data.items.push(item);
+
+          _this.addListItem(item);
+
+          _this.checkPanelLength();
+          save();
+
+        })
+        .on('show.bs.collapse', '.panel-collapse', function() {
+          $(this).siblings('.panel-heading').find('.fa-chevron-right').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+        })
+        .on('hide.bs.collapse', '.panel-collapse', function() {
+          $(this).siblings('.panel-heading').find('.fa-chevron-down').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+        })
+        .on('shown.bs.collapse hidden.bs.collapse', '.panel-collapse', function() {
+          $('.tab-content').trigger('scroll');
+        })
+        .on('change', 'input[name="enable_animation"]:radio', function() {
+          _this.enableAnimation();
+        })
+        .on('change', 'input[name="enable_navigation"]:radio', function() {
+          _this.enableNavigation();
+        })
+        .on('change', 'input[name="enable_skip"]:radio', function() {
+          _this.enableSkipButton();
+        });
+
+      $('#help_tip').on('click', function() {
+        alert("During beta, please use live chat and let us know what you need help with.");
+      });
+
+      var contentHeight = $('body > .form-horizontal').outerHeight();
+      var tabPaneTopPadding = 78;
+
+      $('body > .form-horizontal').scroll(function(event) {
+        var tabContentScrollPos = Math.abs($('.tab-pane-content').position().top - tabPaneTopPadding);
+        var tabPaneHeight = tabPaneTopPadding + $('.tab-pane-content').height();
+
+        if (tabPaneHeight - tabContentScrollPos > contentHeight) {
+          $('body').addClass('controls-sticky-on');
+        } else {
+          $('body').removeClass('controls-sticky-on');
+        }
+      });
     }
-  });
 
-  Fliplet.Studio.emit('widget-save-label-update', {
-      text: 'Select & Save'
-  });
+  };
 
-  imageProvider.then(function (data) {
-    if(data.data) {
-      item.imageConf = data.data;
-      $('[data-id="' + item.id + '"] .thumb-image img').attr("src",data.data.thumbnail);
-      save();
-    }
-    imageProvider = null;
-    Fliplet.Studio.emit('widget-save-label-reset');
-    return Promise.resolve();
-  });
-}
+  return FlSlider;
+})();
 
-function template(name) {
-  return Handlebars.compile($('#template-' + name).html());
-}
-
-function makeid(length)
-{
-  var text = "";
-  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for( var i=0; i < length; i++ )
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-  return text;
-}
-
-function expandAccordion(){
-  accordionCollapsed = false;
-  $('.panel-collapse').collapse('show');
-}
-
-function collapseAccordion(){
-  accordionCollapsed = true;
-  $('.panel-collapse').collapse('hide');
-}
-
-function setListItemTitle(index, title) {
-  $('#accordion').find('.panel:eq(' + index + ') .panel-title-text').html(title);
-}
-
-function addListItem(data) {
-  var $newPanel = $(templates.panel(data));
-  $accordionContainer.append($newPanel);
-
-  $newPanel.find('.form-control:eq(0)').select();
-  $('form.form-horizontal').stop().animate({
-    scrollTop: $('.tab-content').height()
-  }, 300, function(){
-    $('form.form-horizontal').trigger('scroll');
-  });
-}
-
-function checkPanelLength() {
-  if ( $('.panel').length ) {
-    $('#slides').removeClass('list-items-empty');
-  } else {
-    $('#slides').addClass('list-items-empty');
-  }
-}
+var flSlider = new FlSlider(data);
 
 Fliplet.Widget.onSaveRequest(function () {
   if(imageProvider){
