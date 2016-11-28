@@ -234,9 +234,7 @@
 	border: none;
 	text-align: center;
 	cursor: pointer;
-	border-radius: 25px;
-	background-color: #337ab7;
-	border: 2px solid #337ab7;
+	border-radius: 6px;
 }
 
 .btn-secondary {
@@ -250,10 +248,6 @@
 	border-radius: 6px;
 	text-align: center;
 	cursor: pointer;
-	border-radius: 25px;
-	background-color: transparent;
-	border: 2px solid #337ab7;
-	color: #337ab7;
 }
 
 .btn-primary:focus,
@@ -262,29 +256,6 @@
 .btn-secondary:hover,
 .btn:active:focus {
 	outline: none;
-}
-
-.btn-primary:active:focus,
-.btn-primary:active:hover {
-	border: 2px solid #286090;
-}
-
-.btn-primary:active,
-.btn-primary:focus,
-.btn-primary:hover {
-	border: 2px solid #286090;
-}
-
-.btn-secondary:active:focus,
-.btn-secondary:active:hover {
-	background-color: #337ab7;
-	color: #FFFFFF;
-}
-
-.btn-secondary:active,
-.btn-secondary:focus,
-.btn-secondary:hover {
-	color: #337ab7;
 }
 
 .btn-danger {
