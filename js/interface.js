@@ -34,7 +34,7 @@ var FlSlider = (function() {
 
     _.forEach(data.items,function (item){
       if(_.isObject(item.linkAction)) {
-        this.initItemLinkProvider(item);
+        _this.initItemLinkProvider(item);
       }
     });
 
