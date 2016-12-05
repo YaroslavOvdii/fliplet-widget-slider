@@ -41,6 +41,7 @@
     ]
   },
   "references": [
-    "items.$.linkAction.page:page"
+    "items.$.linkAction.page:page",
+    "skipLinkAction.page:page"
   ]
 }
