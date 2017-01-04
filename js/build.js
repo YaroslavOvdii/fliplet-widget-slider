@@ -1,7 +1,5 @@
-$('.ob-skip').click(function (event) {
-  event.preventDefault();
-
-  var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder[data-onboarding-id]').attr('data-onboarding-id') );
+$('.ob-skip span').click(function () {
+  var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder').data('onboarding-id') );
 
   if(!_.isUndefined(data) && (!_.isUndefined(data.skipLinkAction) && !_.isEmpty(data.skipLinkAction))) {
     Fliplet.Navigate.to(data.skipLinkAction);
@@ -11,7 +9,7 @@ $('.ob-skip').click(function (event) {
 $('.btn[data-slide-button-id]').click(function (event) {
   event.preventDefault();
 
-  var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder[data-onboarding-id]').attr('data-onboarding-id') );
+  var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder').data('onboarding-id') );
   var itemData = _.find(data.items,{id: $(this).data('slide-button-id')});
 
   if(!_.isUndefined(itemData) && (!_.isUndefined(itemData.linkAction) && !_.isEmpty(itemData.linkAction))) {
