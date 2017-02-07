@@ -153,73 +153,97 @@
 /* SLIDE CONTENT ANIMATION */
 .swiper-wrapper.animated .swiper-slide img {
 	opacity: 0;
+	-webkit-transform: translate3d(35px,0,0);
 	transform: translate3d(35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.10s;
 	transition: all 0.55s ease-out 0.10s;
 }
 
 .swiper-wrapper.animated .swiper-slide h1 {
 	opacity: 0;
+	-webkit-transform: translate3d(35px,0,0);
 	transform: translate3d(35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.25s;
 	transition: all 0.55s ease-out 0.25s;
 }
 
 .swiper-wrapper.animated .swiper-slide p {
 	opacity: 0;
+	-webkit-transform: translate3d(35px,0,0);
 	transform: translate3d(35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.40s;
 	transition: all 0.55s ease-out 0.40s;
 }
 
 .swiper-wrapper.animated .swiper-slide input {
 	opacity: 0;
+	-webkit-transform: translate3d(35px,0,0);
 	transform: translate3d(35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.55s;
 	transition: all 0.55s ease-out 0.55s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-prev img {
 	opacity: 0;
+	-webkit-transform: translate3d(-35px,0,0);
 	transform: translate3d(-35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.10s;
 	transition: all 0.55s ease-out 0.10s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-prev h1 {
 	opacity: 0;
+	-webkit-transform: translate3d(-35px,0,0);
 	transform: translate3d(-35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.25s;
 	transition: all 0.55s ease-out 0.25s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-prev p {
 	opacity: 0;
+	-webkit-transform: translate3d(-35px,0,0);
 	transform: translate3d(-35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.40s;
 	transition: all 0.55s ease-out 0.40s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-prev input {
 	opacity: 0;
+	-webkit-transform: translate3d(-35px,0,0);
 	transform: translate3d(-35px,0,0);
+	-webkit-transition: all 0.55s ease-out 0.55s;
 	transition: all 0.55s ease-out 0.55s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-active img {
 	opacity: 1;
+	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
+	-webkit-transition: all 0.55s ease-out 0.10s;
 	transition: all 0.55s ease-out 0.10s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-active h1 {
 	opacity: 1;
+	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
+	-webkit-transition: all 0.55s ease-out 0.25s;
 	transition: all 0.55s ease-out 0.25s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-active p {
 	opacity: 1;
+	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
+	-webkit-transition: all 0.55s ease-out 0.40s;
 	transition: all 0.55s ease-out 0.40s;
 }
 
 .swiper-wrapper.animated .swiper-slide.swiper-slide-active input {
 	opacity: 1;
+	-webkit-transform: translate3d(0,0,0);
 	transform: translate3d(0,0,0);
+	-webkit-transition: all 0.55s ease-out 0.55s;
 	transition: all 0.55s ease-out 0.55s;
 }
 /* SLIDE CONTENT ANIMATION */
