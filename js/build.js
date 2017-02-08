@@ -33,6 +33,8 @@ function init(){
       grabCursor: true
     });
 
+    swiper.updateContainerSize();
+
   });
 }
 var debounceLoad = _.debounce(init, 500);
