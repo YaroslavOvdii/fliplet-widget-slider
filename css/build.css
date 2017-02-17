@@ -100,8 +100,7 @@
 
 .swiper-pagination-bullet {
 	margin-right: 5px;
-	background-color: #000000;
-	opacity: 0.1;
+	background-color: rgba(0,0,0,0.1);
 }
 
 .swiper-pagination-bullet:last-child {
