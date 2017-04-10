@@ -20,7 +20,6 @@
       "lodash"
     ],
     "assets": [
-      "js/maps/swiper.min.js.map",
       "js/swiper.min.js",
       "js/interface.js",
       "css/swiper.min.css",
@@ -35,7 +34,6 @@
       "lodash"
     ],
     "assets": [
-      "js/maps/swiper.min.js.map",
       "js/swiper.min.js",
       "js/build.js",
       "css/swiper.min.css",
