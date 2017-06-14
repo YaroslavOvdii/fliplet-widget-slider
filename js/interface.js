@@ -1,8 +1,10 @@
 // VARS
 var widgetId = Fliplet.Widget.getDefaultId();
-var data = Fliplet.Widget.getData() || { items:[] },
-    linkPromises = [],
-    imageProvider;
+var data = Fliplet.Widget.getData() || {
+    items: []
+  },
+  linkPromises = [],
+  imageProvider;
 
 // DEFAULTS
 data.items = data.items || [];
@@ -14,13 +16,12 @@ var FlSlider = (function() {
   var $accordionContainer = $('#accordion');
 
 
-  function makeid(length)
-  {
+  function makeid(length) {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < length; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    for (var i = 0; i < length; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
   }
@@ -29,16 +30,14 @@ var FlSlider = (function() {
   var _this;
 
   // Constructor
-  function FlSlider( data ) {
+  function FlSlider(data) {
     _this = this;
 
-    _.forEach(data.items,function (item){
-      if(_.isObject(item.linkAction)) {
-        _this.initItemLinkProvider(item);
-      }
+    _.forEach(data.items, function(item) {
+      _this.initItemLinkProvider(item);
     });
 
-    if(_.isObject(data.skipLinkAction)) {
+    if (_.isObject(data.skipLinkAction)) {
       this.initSkipLinkProvider();
     }
 
@@ -57,8 +56,8 @@ var FlSlider = (function() {
   FlSlider.prototype = {
 
     // Public functions
-    constructor : FlSlider,
-    setupSortable : function() {
+    constructor: FlSlider,
+    setupSortable: function() {
       var $sortable = $('.panel-group').sortable({
         handle: ".panel-heading",
         cancel: ".icon-delete",
@@ -75,8 +74,10 @@ var FlSlider = (function() {
         stop: function(event, ui) {
           ui.item.removeClass('focus');
 
-          var sortedIds = $( ".panel-group" ).sortable( "toArray" ,{attribute: 'data-id'});
-          data.items = _.sortBy(data.items, function(item){
+          var sortedIds = $(".panel-group").sortable("toArray", {
+            attribute: 'data-id'
+          });
+          data.items = _.sortBy(data.items, function(item) {
             return sortedIds.indexOf(item.id);
           });
           save();
@@ -90,7 +91,7 @@ var FlSlider = (function() {
       $('form.form-horizontal').trigger('scroll');
     },
 
-    loadAnimationToggle : function() {
+    loadAnimationToggle: function() {
       if (typeof data.animationEnabled != "undefined") {
         if (data.animationEnabled) {
           $('#enable-animation-yes').prop("checked", true);
@@ -103,7 +104,7 @@ var FlSlider = (function() {
       _this.enableAnimation();
     },
 
-    loadNavigationToggle : function() {
+    loadNavigationToggle: function() {
       if (typeof data.navigationEnabled != "undefined") {
         if (data.navigationEnabled) {
           $('#enable-navigation-yes').prop("checked", true);
@@ -116,7 +117,7 @@ var FlSlider = (function() {
       _this.enableNavigation();
     },
 
-    loadSkipToggle : function() {
+    loadSkipToggle: function() {
       if (typeof data.skipEnabled != "undefined") {
         if (data.skipEnabled) {
           $('#enable-skip-yes').prop("checked", true);
@@ -129,7 +130,7 @@ var FlSlider = (function() {
       _this.enableSkipButton();
     },
 
-    enableAnimation : function() {
+    enableAnimation: function() {
       if ($('#enable-animation-yes').is(':checked')) {
         data.animationEnabled = true;
       } else if ($('#enable-animation-no').is(':checked')) {
@@ -137,7 +138,7 @@ var FlSlider = (function() {
       }
     },
 
-    enableNavigation : function() {
+    enableNavigation: function() {
       if ($('#enable-navigation-yes').is(':checked')) {
         data.navigationEnabled = true;
       } else if ($('#enable-navigation-no').is(':checked')) {
@@ -145,7 +146,7 @@ var FlSlider = (function() {
       }
     },
 
-    enableSkipButton : function() {
+    enableSkipButton: function() {
       if ($('#enable-skip-yes').is(':checked')) {
         $('#skip-link').addClass('show');
         data.skipEnabled = true;
@@ -155,7 +156,7 @@ var FlSlider = (function() {
       }
     },
 
-    initItemLinkProvider : function(item) {
+    initItemLinkProvider: function(item) {
 
       item.linkAction = item.linkAction || {};
       item.linkAction.provId = item.id;
@@ -168,7 +169,7 @@ var FlSlider = (function() {
         // the interface gets repopulated with the same stuff
         data: item.linkAction,
         // Events fired from the provider
-        onEvent: function (event, data) {
+        onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
           }
@@ -176,8 +177,8 @@ var FlSlider = (function() {
         closeOnSave: false
       });
 
-      linkActionProvider.then(function (data) {
-        item.linkAction = data ? data.data: {};
+      linkActionProvider.then(function(data) {
+        item.linkAction = data && data.data.action !== 'none' ? data.data : null;
         return Promise.resolve();
       });
 
@@ -185,7 +186,7 @@ var FlSlider = (function() {
       linkPromises.push(linkActionProvider);
     },
 
-    initSkipLinkProvider : function() {
+    initSkipLinkProvider: function() {
 
       data.skipLinkAction = data.skipLinkAction || {};
 
@@ -197,7 +198,7 @@ var FlSlider = (function() {
         // the interface gets repopulated with the same stuff
         data: data.skipLinkAction,
         // Events fired from the provider
-        onEvent: function (event, data) {
+        onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
           }
@@ -205,8 +206,8 @@ var FlSlider = (function() {
         closeOnSave: false
       });
 
-      skipLinkActionProvider.then(function (result) {
-        data.skipLinkAction = result ? result.data: {};
+      skipLinkActionProvider.then(function(result) {
+        data.skipLinkAction = result && result.data.action !== 'none' ? result.data : null;
         return Promise.resolve();
       });
 
@@ -214,13 +215,13 @@ var FlSlider = (function() {
       linkPromises.push(skipLinkActionProvider);
     },
 
-    initImageProvider : function(item) {
+    initImageProvider: function(item) {
       imageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
         // Also send the data I have locally, so that
         // the interface gets repopulated with the same stuff
         data: item.imageConf,
         // Events fired from the provider
-        onEvent: function (event, data) {
+        onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
           }
@@ -235,7 +236,7 @@ var FlSlider = (function() {
         if (event.data === 'cancel-button-pressed') {
           Fliplet.Widget.toggleCancelButton(true);
           imageProvider.close();
-          if(_.isEmpty(item.imageConf)) {
+          if (_.isEmpty(item.imageConf)) {
             $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
             $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
@@ -243,13 +244,13 @@ var FlSlider = (function() {
       });
 
       Fliplet.Studio.emit('widget-save-label-update', {
-          text: 'Select & Save'
+        text: 'Select & Save'
       });
 
-      imageProvider.then(function (data) {
-        if(data.data) {
+      imageProvider.then(function(data) {
+        if (data.data) {
           item.imageConf = data.data;
-          $('[data-id="' + item.id + '"] .thumb-image img').attr("src",data.data.thumbnail);
+          $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data.thumbnail);
           save();
         }
         imageProvider = null;
@@ -258,49 +259,53 @@ var FlSlider = (function() {
       });
     },
 
-    expandAccordion : function(){
+    expandAccordion: function() {
       accordionCollapsed = false;
       $('.panel-collapse').collapse('show');
     },
 
-    collapseAccordion : function(){
+    collapseAccordion: function() {
       accordionCollapsed = true;
       $('.panel-collapse').collapse('hide');
     },
 
-    setListItemTitle : function(index, title) {
+    setListItemTitle: function(index, title) {
       $('#accordion').find('.panel:eq(' + index + ') .panel-title-text').html(title);
     },
 
-    addListItem : function(data) {
+    addListItem: function(data) {
       var $newPanel = $(Handlebars.panelTemplate(data));
       $accordionContainer.append($newPanel);
 
       $newPanel.find('.form-control:eq(0)').select();
       $('form.form-horizontal').stop().animate({
         scrollTop: $('.tab-content').height()
-      }, 300, function(){
+      }, 300, function() {
         $('form.form-horizontal').trigger('scroll');
       });
     },
 
-    checkPanelLength : function() {
-      if ( $('.panel').length ) {
+    checkPanelLength: function() {
+      if ($('.panel').length) {
         $('#slides').removeClass('list-items-empty');
       } else {
         $('#slides').addClass('list-items-empty');
       }
     },
 
-    attachObservers : function(){
+    attachObservers: function() {
       _this.$tabcontent
         .on('click', '.icon-delete', function() {
 
           var $item = $(this).closest("[data-id], .panel"),
-              id = $item.data('id');
+            id = $item.data('id');
 
-          _.remove(data.items, {id: id});
-          _.remove(linkPromises,{id: id});
+          _.remove(data.items, {
+            id: id
+          });
+          _.remove(linkPromises, {
+            id: id
+          });
 
           $(this).parents('.panel').remove();
           _this.checkPanelLength();
@@ -311,69 +316,29 @@ var FlSlider = (function() {
         .on('click', '.add-image', function() {
 
           var $item = $(this).closest("[data-id], .panel"),
-              id = $item.data('id'),
-              item = _.find(data.items, {id: id});
+            id = $item.data('id'),
+            item = _.find(data.items, {
+              id: id
+            });
 
           _this.initImageProvider(item);
 
           $(this).text('Replace image');
-          if ( $(this).siblings('.thumb-holder').hasClass('hidden') ) {
+          if ($(this).siblings('.thumb-holder').hasClass('hidden')) {
             $(this).siblings('.thumb-holder').removeClass('hidden');
           }
         })
         .on('click', '.image-remove', function() {
 
           var $item = $(this).closest("[data-id], .panel"),
-              id = $item.data('id'),
-              item = _.find(data.items, {id: id});
+            id = $item.data('id'),
+            item = _.find(data.items, {
+              id: id
+            });
 
           item.imageConf = null;
           $(this).parents('.add-image-holder').find('.add-image').text('Add image');
           $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
-          save();
-        })
-        .on('click', '.list-item-set-link', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-              id = $item.data('id'),
-              item = _.find(data.items, {id: id});
-
-          _this.initItemLinkProvider(item);
-
-          $(this).siblings().removeClass('hidden');
-          $(this).addClass('hidden');
-          $(this).siblings('.link-remove').show();
-          save();
-
-        })
-        .on('click', '.set-skip-link', function() {
-
-          _this.initSkipLinkProvider();
-
-          $(this).siblings().removeClass('hidden');
-          $(this).addClass('hidden');
-          $(this).siblings('.link-remove').show();
-          save();
-
-        })
-        .on('click', '.link-remove', function() {
-          var $item = $(this).closest("[data-id], .panel"),
-              id = $item.data('id'),
-              item = _.find(data.items, {id: id});
-
-          _.remove(linkPromises,{id: id});
-          $('[data-id="' + item.id + '"] .add-link').empty();
-          item.linkAction = null;
-          $(this).addClass('hidden');
-          $(this).siblings('.list-item-set-link').removeClass('hidden');
-          save();
-        })
-        .on('click', '.skip-link-remove', function() {
-          _.remove(linkPromises,{id: data.id});
-          $('.add-skip-link').empty();
-          data.skipLinkAction = null;
-          $(this).addClass('hidden');
-          $(this).siblings('.set-skip-link').removeClass('hidden');
           save();
         })
         .on('keyup change blur paste', '.list-item-title', function() {
@@ -404,7 +369,7 @@ var FlSlider = (function() {
         })
         .on('click', '.new-list-item', function() {
 
-          var item ={};
+          var item = {};
           item.id = makeid(8);
           item.number = _this.listLength++;
           item.linkAction = null;
@@ -462,27 +427,27 @@ var FlSlider = (function() {
 
 var flSlider = new FlSlider(data);
 
-Fliplet.Widget.onSaveRequest(function () {
-  if(imageProvider){
+Fliplet.Widget.onSaveRequest(function() {
+  if (imageProvider) {
     imageProvider.forwardSaveRequest();
   } else {
     save(true);
   }
 });
 
-var debounceSave = _.debounce( save, 500);
+var debounceSave = _.debounce(save, 500);
 
-function save(notifyComplete){
-  _.forEach(data.items,function(item){
-    item.description = $('#list-item-desc-'+item.id).val();
-    item.title = $('#list-item-title-'+item.id).val();
-    item.linkLabel = $('#list-item-link-label-'+item.id).val();
+function save(notifyComplete) {
+  _.forEach(data.items, function(item) {
+    item.description = $('#list-item-desc-' + item.id).val();
+    item.title = $('#list-item-title-' + item.id).val();
+    item.linkLabel = $('#list-item-link-label-' + item.id).val();
   });
 
-  if(notifyComplete) {
-    Fliplet.Widget.all(linkPromises).then(function () {
+  if (notifyComplete) {
+    Fliplet.Widget.all(linkPromises).then(function() {
       // when all providers have finished
-      Fliplet.Widget.save(data).then(function () {
+      Fliplet.Widget.save(data).then(function() {
         // Close the interface for good
         Fliplet.Studio.emit('reload-widget-instance', widgetId);
         Fliplet.Widget.complete();
@@ -490,12 +455,12 @@ function save(notifyComplete){
     });
 
     // forward save request to all providers
-    linkPromises.forEach(function (promise) {
+    linkPromises.forEach(function(promise) {
       promise.forwardSaveRequest();
     });
   } else {
     // Partial save while typing/using the interface
-    Fliplet.Widget.save(data).then(function () {
+    Fliplet.Widget.save(data).then(function() {
       Fliplet.Studio.emit('reload-widget-instance', widgetId);
     });
   }
