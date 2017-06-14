@@ -376,6 +376,7 @@ var FlSlider = (function() {
           item.description = "";
           data.items.push(item);
 
+          _this.initItemLinkProvider(item);
           _this.addListItem(item);
 
           _this.checkPanelLength();
