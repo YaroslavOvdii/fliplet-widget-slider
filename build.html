@@ -7,15 +7,13 @@
     </div>
     {{/if}}
     <div class="swiper-container">
-      <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}" >
+      <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}">
         {{#each items}}
         <div class="swiper-slide" data-slider-id="{{id}}">
           {{#if imageConf}}
-          <img src="{{imageConf.url}}" />
-          {{/if}}
-          <h1>{{title}}</h1>
-          {{#if description}}<p>{{nl2br description}}</p>{{/if}}
-          {{#if linkAction}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
+          <img src="{{imageConf.url}}" /> {{/if}}
+          <h1>{{title}}</h1> {{#if description}}
+          <p>{{nl2br description}}</p>{{/if}} {{#if linkAction.action}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
         </div>
         {{/each}}
       </div>
@@ -44,8 +42,7 @@
           <h1>Parturient Ridiculus Magna</h1>
           <p>Maecenas faucibus mollis interdum. Maecenas faucibus mollis interdum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
             <br>
-            <br>
-            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+            <br> Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
         </div>
       </div>
     </div>
