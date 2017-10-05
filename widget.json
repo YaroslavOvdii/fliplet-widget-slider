@@ -42,6 +42,7 @@
   },
   "references": [
     "items.$.linkAction.page:page",
+    "items.$.linkAction.files.id:mediaFile",
     "skipLinkAction.page:page",
     "items.$.imageConf.id:mediaFile"
   ]
