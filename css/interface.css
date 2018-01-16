@@ -17,6 +17,10 @@ body {
   padding: 15px;
 }
 
+.add-link .fl-widget-provider {
+  padding: 0px;
+}
+
 #action {
   overflow: hidden;
 }
