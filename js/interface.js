@@ -37,14 +37,11 @@ var FlSlider = (function() {
       _this.initItemLinkProvider(item);
     });
 
-    if (_.isObject(data.skipLinkAction)) {
-      this.initSkipLinkProvider();
-    }
-
     this.listLength = data.items.length + 1;
     this.$tabcontent = $('.tab-content');
     Handlebars.panelTemplate = Handlebars.compile($('#template-panel').html());
 
+    this.initSkipLinkProvider();
     this.checkPanelLength();
     this.setupSortable();
     this.attachObservers();
@@ -158,7 +155,14 @@ var FlSlider = (function() {
 
     initItemLinkProvider: function(item) {
 
-      item.linkAction = item.linkAction || {};
+      item.linkAction = $.extend(true, {
+        action: 'screen',
+        page: '',
+        transition: 'slide.left',
+        options: {
+          hideAction: true
+        }
+      }, item.linkAction);
       item.linkAction.provId = item.id;
 
       var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
@@ -188,7 +192,14 @@ var FlSlider = (function() {
 
     initSkipLinkProvider: function() {
 
-      data.skipLinkAction = data.skipLinkAction || {};
+      data.skipLinkAction = $.extend(true, {
+        action: 'screen',
+        page: '',
+        transition: 'slide.left',
+        options: {
+          hideAction: true
+        }
+      }, data.skipLinkAction);
 
       var skipLinkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
