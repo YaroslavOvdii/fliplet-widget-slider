@@ -70,7 +70,7 @@
 	font-size: 1em;
 	line-height: 34px;
 	padding: 5px 15px;
-	z-index: 5;
+	z-index: 11;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -79,6 +79,7 @@
 
 .swiper-container {
 	width: 100%;
+	z-index: 11;
 }
 
 .swiper-wrapper {
@@ -123,7 +124,7 @@
 	height: 48px;
 	margin: -24px 0 0;
 	cursor: default;
-	z-index: 10;
+	z-index: 11;
 	line-height: 48px;
 	font-size: 48px;
 	color: #999999;

@@ -26,14 +26,24 @@ function init(){
       loop: false,
       autoHeight: true,
 
-      pagination: '.swiper-pagination',
-      paginationClickable: true,
-      nextButton: '.swiper-button-next',
-      prevButton: '.swiper-button-prev',
-      grabCursor: true
+      pagination: {
+        el: '.swiper-pagination',
+        type: 'bullets',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      grabCursor: true,
+      on: {
+        touchStart: function(event) {
+          event.stopPropagation();
+        }
+      }
     });
 
-    swiper.updateContainerSize();
+    swiper.updateSize();
 
   });
 }
