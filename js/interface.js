@@ -33,10 +33,6 @@ var FlSlider = (function() {
   function FlSlider(data) {
     _this = this;
 
-    _.forEach(data.items, function(item) {
-      _this.initItemLinkProvider(item);
-    });
-
     if (_.isObject(data.skipLinkAction)) {
       this.initSkipLinkProvider();
     }
@@ -150,6 +146,7 @@ var FlSlider = (function() {
       if ($('#enable-skip-yes').is(':checked')) {
         $('#skip-link').addClass('show');
         data.skipEnabled = true;
+        _this.initSkipLinkProvider();
       } else if ($('#enable-skip-no').is(':checked')) {
         $('#skip-link').removeClass('show');
         data.skipEnabled = false;
@@ -384,6 +381,19 @@ var FlSlider = (function() {
 
         })
         .on('show.bs.collapse', '.panel-collapse', function() {
+          // Get item ID / Get provider / Get item
+          var itemID = $(this).parents('.panel').data('id');
+          console.log(linkPromises)
+          var itemProvider = _.find(linkPromises, function(provider) {
+            return provider.id === itemID;
+          });
+          var item = _.find(data.items, function(item) {
+            return item.id === itemID;
+          });
+          // Init the link provider when the accordion opens
+          if (!itemProvider && item) {
+            _this.initItemLinkProvider(item);
+          }
           $(this).siblings('.panel-heading').find('.fa-chevron-right').removeClass('fa-chevron-right').addClass('fa-chevron-down');
         })
         .on('hide.bs.collapse', '.panel-collapse', function() {
