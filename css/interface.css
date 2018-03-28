@@ -14,7 +14,6 @@ body {
   border: 0;
   width: 100%;
   background-color: transparent;
-  padding: 15px;
 }
 
 #action {
@@ -29,6 +28,10 @@ body {
 
 .add-link {
   margin-top: 10px;
+}
+
+.add-skip-link {
+  padding: 0 15px;
 }
 
 .text-left {
