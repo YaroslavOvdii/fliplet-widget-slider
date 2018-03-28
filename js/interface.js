@@ -383,7 +383,6 @@ var FlSlider = (function() {
         .on('show.bs.collapse', '.panel-collapse', function() {
           // Get item ID / Get provider / Get item
           var itemID = $(this).parents('.panel').data('id');
-          console.log(linkPromises)
           var itemProvider = _.find(linkPromises, function(provider) {
             return provider.id === itemID;
           });
