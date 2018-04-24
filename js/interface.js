@@ -184,6 +184,9 @@ var FlSlider = (function() {
     },
 
     initSkipLinkProvider: function() {
+      if (!$('.add-skip-link').is(':empty')) {
+        return;
+      }
 
       data.skipLinkAction = data.skipLinkAction || {};
 
