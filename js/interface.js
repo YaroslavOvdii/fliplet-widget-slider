@@ -184,13 +184,17 @@ var FlSlider = (function() {
     },
 
     initSkipLinkProvider: function() {
+      var providerSelector = '.add-skip-link';
+      if (!$(providerSelector).is(':empty')) {
+        return;
+      }
 
       data.skipLinkAction = data.skipLinkAction || {};
 
       var skipLinkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
         // otherwise will be displayed as a full-size iframe overlay
-        selector: '.add-skip-link',
+        selector: providerSelector,
         // Also send the data I have locally, so that
         // the interface gets repopulated with the same stuff
         data: data.skipLinkAction,
