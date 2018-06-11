@@ -18,6 +18,10 @@ function init(){
 
     swiper.updateContainerSize();
 
+    $(window).on('resize', function() {
+      swiper.updateContainerSize();
+    });
+
     $(container).find('.ob-skip span').click(function () {
       var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder').data('onboarding-id') );
 
