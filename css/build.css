@@ -94,7 +94,7 @@
 	overflow-x: hidden;
 }
 
-.swiper-pagination {
+.ob-bottom-nav .swiper-pagination {
 	position: relative;
 }
 
@@ -113,9 +113,9 @@
 	background: #337ab7;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
-	background: none;
+.onboarding-content .swiper-button-next,
+.onboarding-content .swiper-button-prev {
+	background-image: none;
 	position: absolute;
 	top: 50%;
 	width: 33px;
@@ -129,23 +129,23 @@
 	color: #999999;
 }
 
-.swiper-button-prev {
+.onboarding-content .swiper-button-prev {
 	left: 0;
 	text-align: left;
 }
 
-.swiper-button-next {
+.onboarding-content .swiper-button-next {
 	right: 0;
 	text-align: right;
 }
 
-.swiper-button-next,
-.swiper-button-prev {
+.onboarding-content .swiper-button-next,
+.onboarding-content .swiper-button-prev {
 	cursor: pointer;
 }
 
-.swiper-button-next.swiper-button-disabled,
-.swiper-button-prev.swiper-button-disabled {
+.onboarding-content .swiper-button-next.swiper-button-disabled,
+.onboarding-content .swiper-button-prev.swiper-button-disabled {
 	opacity: 0;
 	cursor: default;
 }
