@@ -16,10 +16,10 @@ function init(){
       grabCursor: true
     });
 
-    swiper.updateContainerSize();
+    swiper.update();
 
     $(window).on('resize', function() {
-      swiper.updateContainerSize();
+      swiper.update();
     });
 
     $(container).find('.ob-skip span').click(function () {
