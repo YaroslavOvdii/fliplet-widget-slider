@@ -4,7 +4,8 @@ var data = Fliplet.Widget.getData() || {
     items: []
   },
   linkPromises = [],
-  imageProvider;
+  imageProvider,
+  fullImageProvider;
 
 // DEFAULTS
 data.items = data.items || [];
@@ -47,6 +48,8 @@ var FlSlider = (function() {
     this.loadAnimationToggle();
     this.loadNavigationToggle();
     this.loadSkipToggle();
+    this.loadFullscreenToggle();
+    this.loadFullscreenImage();
   }
 
   FlSlider.prototype = {
@@ -126,6 +129,27 @@ var FlSlider = (function() {
       _this.enableSkipButton();
     },
 
+    loadFullscreenToggle: function() {
+      if (typeof data.fullScreen != "undefined") {
+        if (data.fullScreen) {
+          $('#enable-fullscreen-yes').prop("checked", true);
+        } else {
+          $('#enable-fullscreen-no').prop("checked", true);
+        }
+      } else {
+        $('#enable-fullscreen-no').prop("checked", true);
+      }
+      _this.enableFullscreenOption();
+    },
+
+    loadFullscreenImage: function() {
+      if (typeof data.fullImageConfig != "undefined" || data.fullImageConfig != null) {
+        $('.background-image .set-bg-image').text('Replace image');
+        $('.background-image .thumb-holder').removeClass('hidden');
+        $('.background-image .thumb-image img').attr('src', data.fullImageConfig.url);
+      }
+    },
+
     enableAnimation: function() {
       if ($('#enable-animation-yes').is(':checked')) {
         data.animationEnabled = true;
@@ -150,6 +174,16 @@ var FlSlider = (function() {
       } else if ($('#enable-skip-no').is(':checked')) {
         $('#skip-link').removeClass('show');
         data.skipEnabled = false;
+      }
+    },
+
+    enableFullscreenOption: function() {
+      if ($('#enable-fullscreen-yes').is(':checked')) {
+        $('.background-image').removeClass('hidden');
+        data.fullScreen = true;
+      } else if ($('#enable-fullscreen-no').is(':checked')) {
+        $('.background-image').addClass('hidden');
+        data.fullScreen = false;
       }
     },
 
@@ -260,6 +294,50 @@ var FlSlider = (function() {
       });
     },
 
+    initImageBgProvider: function() {
+      fullImageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
+        // Also send the data I have locally, so that
+        // the interface gets repopulated with the same stuff
+        data: data.fullImageConfig,
+        // Events fired from the provider
+        onEvent: function(event, data) {
+          if (event === 'interface-validate') {
+            Fliplet.Widget.toggleSaveButton(data.isValid === true);
+          }
+        },
+        single: true,
+        type: 'image'
+      });
+
+      Fliplet.Widget.toggleCancelButton(false);
+
+      window.addEventListener('message', function(event) {
+        if (event.data === 'cancel-button-pressed') {
+          Fliplet.Widget.toggleCancelButton(true);
+          fullImageProvider.close();
+          if (_.isEmpty(item.fullImageConfig)) {
+            $('.background-image .add-image-holder').find('.set-bg-image').text('Add image');
+            $('.background-image .add-image-holder').find('.thumb-holder').addClass('hidden');
+          }
+        }
+      });
+
+      Fliplet.Studio.emit('widget-save-label-update', {
+        text: 'Select & Save'
+      });
+
+      fullImageProvider.then(function(results) {
+        if (results.data) {
+          data.fullImageConfig = results.data;
+          $('.background-image .thumb-image img').attr("src", results.data.thumbnail);
+          save();
+        }
+        fullImageProvider = null;
+        Fliplet.Studio.emit('widget-save-label-reset');
+        return Promise.resolve();
+      });
+    },
+
     expandAccordion: function() {
       accordionCollapsed = false;
       $('.panel-collapse').collapse('show');
@@ -342,6 +420,20 @@ var FlSlider = (function() {
           $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
           save();
         })
+        .on('click', '.set-bg-image', function() {
+          _this.initImageBgProvider();
+
+          $(this).text('Replace image');
+          if ($(this).siblings('.thumb-holder').hasClass('hidden')) {
+            $(this).siblings('.thumb-holder').removeClass('hidden');
+          }
+        })
+        .on('click', '.remove-bg-image', function() {
+          data.fullImageConfig = null;
+          $(this).parents('.add-image-holder').find('.set-bg-image').text('Add image');
+          $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
+          save();
+        })
         .on('keyup change blur paste', '.list-item-title', function() {
           var $listItem = $(this).parents('.panel');
           _this.setListItemTitle($listItem.index(), $(this).val());
@@ -413,6 +505,9 @@ var FlSlider = (function() {
         })
         .on('change', 'input[name="enable_skip"]:radio', function() {
           _this.enableSkipButton();
+        })
+        .on('change', 'input[name="enable_fullscreen"]:radio', function() {
+          _this.enableFullscreenOption();
         });
 
       $('#help_tip').on('click', function() {
@@ -444,6 +539,8 @@ var flSlider = new FlSlider(data);
 Fliplet.Widget.onSaveRequest(function() {
   if (imageProvider) {
     imageProvider.forwardSaveRequest();
+  } else if (fullImageProvider) {
+    fullImageProvider.forwardSaveRequest();
   } else {
     save(true);
   }

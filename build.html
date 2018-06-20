@@ -1,32 +1,68 @@
 {{#if items.length}}
-<div class="onboarding-holder" data-onboarding-id="{{id}}">
-  <div class="onboarding-content">
+  {{#if fullScreen}}
+  <div class="onboarding-holder full-screen" data-onboarding-id="{{id}}" {{#if fullImageConfig}}style="background-image: url('{{fullImageConfig.url}}')"{{/if}}>
+    <div class="onboarding-alert-placeholder">
+      Displays in full screen mode
+    </div>
     {{#if skipEnabled}}
     <div class="ob-top-nav">
       <div class="ob-skip"><span>Skip</span></div>
     </div>
     {{/if}}
-    <div class="swiper-container">
-      <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}">
-        {{#each items}}
-        <div class="swiper-slide" data-slider-id="{{id}}">
-          {{#if imageConf}}
-          <img src="{{imageConf.url}}" /> {{/if}}
-          <h1>{{title}}</h1> {{#if description}}
-          <p>{{nl2br description}}</p>{{/if}} {{#if linkAction.action}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
+    <div class="onboarding-content">
+      <div class="swiper-container">
+        <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}">
+          {{#each items}}
+          <div class="swiper-slide" data-slider-id="{{id}}">
+            <div class="swiper-slide-content">
+              {{#if imageConf}}
+              <img src="{{imageConf.url}}" /> {{/if}}
+              <h1>{{title}}</h1> {{#if description}}
+              <p>{{nl2br description}}</p>{{/if}} {{#if linkAction.action}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
+            </div>
+          </div>
+          {{/each}}
         </div>
-        {{/each}}
+      </div>
+      <!-- Create handlebars IF condition when necessary to hide -->
+      <div class="swiper-button-prev swiper-button-prev-{{id}}"><i class="fa fa-angle-left"></i></div>
+      <div class="swiper-button-next swiper-button-next-{{id}}"><i class="fa fa-angle-right"></i></div>
+
+      <div class="ob-bottom-nav">
+        <div class="swiper-pagination swiper-pagination-{{id}}"></div>
       </div>
     </div>
-    <!-- Create handlebars IF condition when necessary to hide -->
-    <div class="swiper-button-prev swiper-button-prev-{{id}}"><i class="fa fa-angle-left"></i></div>
-    <div class="swiper-button-next swiper-button-next-{{id}}"><i class="fa fa-angle-right"></i></div>
+  </div>
+  {{else}}
+  <div class="onboarding-holder" data-onboarding-id="{{id}}">
+    <div class="onboarding-content">
+      {{#if skipEnabled}}
+      <div class="ob-top-nav">
+        <div class="ob-skip"><span>Skip</span></div>
+      </div>
+      {{/if}}
+      <div class="swiper-container">
+        <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}">
+          {{#each items}}
+          <div class="swiper-slide" data-slider-id="{{id}}">
+            {{#if imageConf}}
+            <img src="{{imageConf.url}}" /> {{/if}}
+            <h1>{{title}}</h1> {{#if description}}
+            <p>{{nl2br description}}</p>{{/if}} {{#if linkAction.action}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <!-- Create handlebars IF condition when necessary to hide -->
+      <div class="swiper-button-prev swiper-button-prev-{{id}}"><i class="fa fa-angle-left"></i></div>
+      <div class="swiper-button-next swiper-button-next-{{id}}"><i class="fa fa-angle-right"></i></div>
 
-    <div class="ob-bottom-nav">
-      <div class="swiper-pagination swiper-pagination-{{id}}"></div>
+      <div class="ob-bottom-nav">
+        <div class="swiper-pagination swiper-pagination-{{id}}"></div>
+      </div>
     </div>
   </div>
-</div>
+  {{/if}}
 {{else}}
 <div class="onboarding-holder placeholder">
   <div class="onboarding-content">

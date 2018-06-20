@@ -164,21 +164,50 @@
       </div>
       -->
 
+      <div>
+        <div class="form-group">
+          <div class="col-sm-4 control-label">
+            <label for="enable-skip">Do you want to configure a <em>Skip</em> button?</label>
+          </div>
+          <div class="col-sm-8">
+            <div class="radio-buttons clearfix">
+              <div class="radio">
+                <input type="radio" id="enable-skip-yes" name="enable_skip" value="enable-skip-yes">
+                <label for="enable-skip-yes">
+                  Yes
+                </label>
+              </div>
+              <div class="radio">
+                <input type="radio" id="enable-skip-no" name="enable_skip" value="enable-skip-no">
+                <label for="enable-skip-no">
+                  No
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group clearfix" id="skip-link">
+          <div class="add-skip-link"></div>
+        </div>
+      </div>
+
       <div class="form-group">
         <div class="col-sm-4 control-label">
-          <label for="enable-skip">Do you want to configure a <em>Skip</em> button?</label>
+          <label>Do you want to make this component full screen?</label>
+          <span class="help-block">Only enable this option if you don't have other content on the screen.</span>
         </div>
         <div class="col-sm-8">
           <div class="radio-buttons clearfix">
             <div class="radio">
-              <input type="radio" id="enable-skip-yes" name="enable_skip" value="enable-skip-yes">
-              <label for="enable-skip-yes">
+              <input type="radio" id="enable-fullscreen-yes" name="enable_fullscreen" value="enable-fullscreen-yes">
+              <label for="enable-fullscreen-yes">
                 Yes
               </label>
             </div>
             <div class="radio">
-              <input type="radio" id="enable-skip-no" name="enable_skip" value="enable-skip-no">
-              <label for="enable-skip-no">
+              <input type="radio" id="enable-fullscreen-no" name="enable_fullscreen" value="enable-fullscreen-no">
+              <label for="enable-fullscreen-no">
                 No
               </label>
             </div>
@@ -186,12 +215,21 @@
         </div>
       </div>
 
-      <div class="form-group clearfix" id="skip-link">
-        <div class="add-skip-link"></div>
+      <div class="form-group background-image hidden">
+        <div class="col-sm-4 control-label">
+          <label>Do you want to add a background image?</label>
+        </div>
+        <div class="col-sm-8">
+          <div class="add-image-holder ">
+            <div class="btn btn-default set-bg-image">Add Image</div>
+            <div class="thumb-holder hidden">
+              <div class="thumb-image"><img src="" /></div>
+              <div class="btn btn-link text-danger remove-bg-image">Remove Image</div>
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
-
   </div>
 </form>
 
@@ -258,9 +296,7 @@
                   <input type="text" class="form-control list-item-link-label" id="list-item-link-label-\{{id}}" name="list-item-link-label-\{{id}}" placeholder="Enter button label" value="">
                   <div class="add-link"></div>
                 </div>
-
               </div>
-
             </div>
           </div>
 

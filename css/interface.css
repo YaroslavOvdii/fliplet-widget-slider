@@ -295,7 +295,8 @@ textarea.form-control {
   display: none;
 }
 
-.add-image {
+.add-image,
+.set-bg-image {
   float: left;
 }
 

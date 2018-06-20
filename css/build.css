@@ -46,7 +46,7 @@
 	background-color: transparent;
 	line-height: 34px;
 	padding: 5px 15px;
-	z-index: 5;
+	z-index: 1;
 }
 
 .ob-top-nav .ob-skip {
@@ -320,4 +320,114 @@
 .btn-link,
 a {
 	text-decoration: underline;
+}
+
+/** ONBOARDING FULL SCREEN **/
+.onboarding-holder.full-screen .onboarding-alert-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30px 15px 15px;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 18px;
+  display: none;
+}
+
+.mode-interact .onboarding-holder.full-screen .onboarding-alert-placeholder {
+  display: flex;
+}
+
+.mode-interact .onboarding-holder.full-screen {
+	background-image: none !important;
+}
+.context-build:not(.mode-interact) .onboarding-holder.full-screen {
+	background-position: center center;
+	background-size: cover;
+	background-repeat: no-repeat;
+
+	position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9;
+}
+
+.context-build:not(.mode-interact) .full-screen .onboarding-content {
+  position: absolute;
+  top: 0;
+  top: env(safe-area-inset-top);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.context-build:not(.mode-interact) .full-screen .swiper-container {
+	position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.context-build:not(.mode-interact) .full-screen .swiper-wrapper {
+	position: relative;
+	width: 100%;
+	height: 100% !important;
+  margin: 0px;
+}
+
+.context-build:not(.mode-interact) .fl-with-top-menu .full-screen .swiper-wrapper {
+	padding-top: 44px;
+}
+
+.context-build:not(.mode-interact) .full-screen .swiper-slide {
+	width: 100% !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.context-build:not(.mode-interact) .fl-with-bottom-menu .full-screen .swiper-slide {
+	height: calc(100% - 65px);
+}
+
+.context-build:not(.mode-interact) .fl-with-top-menu .full-screen .swiper-slide {
+  height: calc(100% - 44px);
+}
+
+.context-build:not(.mode-interact) .full-screen .swiper-slide-content {
+	width: 80%;
+	background-color: #ffffff;
+	border-radius: 20px;
+	padding: 15px;
+	max-height: 85%;
+	overflow: auto;
+}
+
+.full-screen .swiper-button-next,
+.full-screen .swiper-button-prev {
+	display: none;
+}
+
+.platform-web .full-screen .swiper-button-next,
+.platform-web .full-screen .swiper-button-prev {
+	display: block;
+}
+
+.fl-menu-bottom-bar .full-screen .ob-bottom-nav {
+	bottom: 65px;
 }
