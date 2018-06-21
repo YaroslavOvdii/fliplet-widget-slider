@@ -1,4 +1,8 @@
 /* ONBOARDING */
+.mode-interact .onboarding-holder {
+	pointer-events: none;
+}
+
 .onboarding-holder .image-holder {
 	padding-top: 52%;
 	background-color: #c2c2c2;
@@ -412,10 +416,12 @@ a {
 .context-build:not(.mode-interact) .full-screen .swiper-slide-content {
 	width: 80%;
 	background-color: #ffffff;
+  box-shadow: 0 10px 30px 0px rgba(0, 0, 0, 0.1);
 	border-radius: 20px;
 	padding: 15px;
 	max-height: 85%;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .full-screen .swiper-button-next,
@@ -428,6 +434,6 @@ a {
 	display: block;
 }
 
-.fl-menu-bottom-bar .full-screen .ob-bottom-nav {
+.context-build:not(.mode-interact) .fl-menu-bottom-bar .full-screen .ob-bottom-nav {
 	bottom: 65px;
 }

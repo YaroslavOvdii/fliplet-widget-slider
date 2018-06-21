@@ -320,3 +320,7 @@ textarea.form-control {
 .thumb-holder .image-remove {
   margin-left: 0;
 }
+
+.delay-input {
+  margin-top: 15px;
+}

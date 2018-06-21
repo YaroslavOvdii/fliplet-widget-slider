@@ -434,6 +434,14 @@ var FlSlider = (function() {
           $(this).parents('.add-image-holder').find('.thumb-holder').addClass('hidden');
           save();
         })
+        .on('change', '#add-delay', function() {
+          if ($(this).is(':checked')) {
+            $('.delay-input').removeClass('hidden');
+            return;
+          }
+
+          $('.delay-input').addClass('hidden');
+        })
         .on('keyup change blur paste', '.list-item-title', function() {
           var $listItem = $(this).parents('.panel');
           _this.setListItemTitle($listItem.index(), $(this).val());
