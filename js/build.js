@@ -1,5 +1,4 @@
 function init(){
-
   $('[data-onboarding-id]').each(function(){
     var container = this;
     var id = $(container).data('onboarding-id');
