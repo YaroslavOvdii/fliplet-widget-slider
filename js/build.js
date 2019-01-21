@@ -15,7 +15,7 @@ function init(){
       nextButton: '.swiper-button-next-' + id,
       prevButton: '.swiper-button-prev-' + id,
       grabCursor: true,
-      onSlideNextEnd: function () {
+      onSlideChangeEnd: function () {
         /**
          * get current page context if any
          */
@@ -29,7 +29,7 @@ function init(){
         var slidersContext = Object.assign(existingPageContext.sliders || {}, {
           [id]: swiper.activeIndex
         });
-        
+
         Fliplet.Env.set('pageContext', Object.assign(existingPageContext, slidersContext));
       }
     });
