@@ -1,4 +1,5 @@
 function init(){
+
   $('[data-onboarding-id]').each(function(){
     var container = this;
     var id = $(container).data('onboarding-id');
@@ -13,7 +14,24 @@ function init(){
       paginationClickable: true,
       nextButton: '.swiper-button-next-' + id,
       prevButton: '.swiper-button-prev-' + id,
-      grabCursor: true
+      grabCursor: true,
+      onSlideNextEnd: function () {
+        /**
+         * get current page context if any
+         */
+        var existingPageContext = Fliplet.Env.get('pageContext') || {};
+        /**
+         * use a direct access data structure for faster lookup later
+         */
+        /**
+         * store the current slider context under the slider's id
+         */
+        var slidersContext = Object.assign(existingPageContext.sliders || {}, {
+          [id]: swiper.activeIndex
+        });
+        
+        Fliplet.Env.set('pageContext', Object.assign(existingPageContext, slidersContext));
+      }
     });
 
     swiper.update();
@@ -22,6 +40,11 @@ function init(){
       swiper.update();
     });
 
+    Fliplet.Hooks.on('restorePageContext', function (pageContext) {
+      if(pageContext && pageContext[id]){
+        swiper.slideTo(pageContext[id]);
+      }
+    })
     $(container).find('.ob-skip span').click(function () {
       var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder').data('onboarding-id') );
 
