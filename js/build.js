@@ -18,7 +18,7 @@ function init(){
         /**
          * get current page context if any
          */
-        var existingPageContext = Fliplet.Env.get('pageContext') || {};
+        var existingPageContext = Fliplet.Page.Context.get() || {};
         /**
          * use a direct access data structure for faster lookup later
          */
@@ -29,7 +29,7 @@ function init(){
           [id]: swiper.activeIndex
         });
 
-        Fliplet.Env.set('pageContext', Object.assign(existingPageContext, slidersContext));
+        Fliplet.Page.Context.set(Object.assign(existingPageContext, slidersContext))
       }
     });
 
