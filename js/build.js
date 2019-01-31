@@ -21,15 +21,13 @@ function init(){
         var existingPageContext = Fliplet.Page.Context.get() || {};
         /**
          * use a direct access data structure for faster lookup later
-         */
-        /**
          * store the current slider context under the slider's id
          */
         var slidersContext = _.assign(existingPageContext.sliders || {}, {
           [id]: swiper.activeIndex
         });
 
-        Fliplet.Page.Context.set(_.assign(existingPageContext, slidersContext))
+        Fliplet.Page.Context.set(_.assign(existingPageContext, slidersContext));
       }
     });
 
@@ -43,7 +41,8 @@ function init(){
       if(pageContext && pageContext[id]){
         swiper.slideTo(pageContext[id]);
       }
-    })
+    });
+
     $(container).find('.ob-skip span').click(function () {
       var data = Fliplet.Widget.getData( $(this).parents('.onboarding-holder').data('onboarding-id') );
 
