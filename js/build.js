@@ -25,11 +25,11 @@ function init(){
         /**
          * store the current slider context under the slider's id
          */
-        var slidersContext = Object.assign(existingPageContext.sliders || {}, {
+        var slidersContext = _.assign(existingPageContext.sliders || {}, {
           [id]: swiper.activeIndex
         });
 
-        Fliplet.Page.Context.set(Object.assign(existingPageContext, slidersContext))
+        Fliplet.Page.Context.set(_.assign(existingPageContext, slidersContext))
       }
     });
 
