@@ -13,13 +13,34 @@ function init(){
       paginationClickable: true,
       nextButton: '.swiper-button-next-' + id,
       prevButton: '.swiper-button-prev-' + id,
-      grabCursor: true
+      grabCursor: true,
+      onSlideChangeEnd: function () {
+        /**
+         * get current page context if any
+         */
+        var existingPageContext = Fliplet.Page.Context.get() || {};
+        /**
+         * use a direct access data structure for faster lookup later
+         * store the current slider context under the slider's id
+         */
+        var slidersContext = _.assign(existingPageContext.sliders || {}, {
+          [id]: swiper.activeIndex
+        });
+
+        Fliplet.Page.Context.set(_.assign(existingPageContext, slidersContext));
+      }
     });
 
     swiper.update();
 
     $(window).on('resize', function() {
       swiper.update();
+    });
+
+    Fliplet.Hooks.on('restorePageContext', function (pageContext) {
+      if(pageContext && pageContext[id]){
+        swiper.slideTo(pageContext[id]);
+      }
     });
 
     $(container).find('.ob-skip span').click(function () {
