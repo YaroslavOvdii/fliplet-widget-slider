@@ -8,7 +8,6 @@ function init(){
       direction: 'horizontal',
       loop: false,
       autoHeight: true,
-
       pagination: '.swiper-pagination-' + id,
       paginationClickable: true,
       nextButton: '.swiper-button-next-' + id,
@@ -23,9 +22,8 @@ function init(){
          * use a direct access data structure for faster lookup later
          * store the current slider context under the slider's id
          */
-        var slidersContext = _.assign(existingPageContext.sliders || {}, {
-          [id]: swiper.activeIndex
-        });
+        var slidersContext = existingPageContext.sliders || {};
+        slidersContext[id] = swiper.activeIndex;
 
         Fliplet.Page.Context.set(_.assign(existingPageContext, slidersContext));
       }
