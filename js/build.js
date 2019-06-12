@@ -35,6 +35,10 @@ function init(){
       swiper.update();
     });
 
+    Fliplet.Hooks.on('appearanceChanged', function () {
+      swiper.update();
+    });
+
     Fliplet.Hooks.on('restorePageContext', function (pageContext) {
       if(pageContext && pageContext[id]){
         swiper.slideTo(pageContext[id]);
