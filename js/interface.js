@@ -415,10 +415,6 @@ var FlSlider = (function() {
           _this.enableSkipButton();
         });
 
-      $('#help_tip').on('click', function() {
-        alert("During beta, please use live chat and let us know what you need help with.");
-      });
-
       var contentHeight = $('body > .form-horizontal').outerHeight();
       var tabPaneTopPadding = 78;
 
