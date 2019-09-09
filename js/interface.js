@@ -449,7 +449,7 @@ Fliplet.Widget.onSaveRequest(function() {
   if (imageProvider) {
     imageProvider.forwardSaveRequest();
   } else {
-    save(true);
+    save(false, true);
   }
 });
 

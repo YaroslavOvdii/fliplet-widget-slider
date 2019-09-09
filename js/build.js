@@ -1,6 +1,7 @@
 var firstInit = true;
 var globalSwiper;
-function init(){
+var template = Fliplet.Widget.Templates['template.slide'];
+function init() {
   var i = 0;
   $('[data-onboarding-id]').each(function(){
     if (i !== 0) {
@@ -74,16 +75,7 @@ function init(){
     });
 
   });
-}
 
-// Creating slide template to put in to the slide content
-function slideTemplate (data) {
-  var template = data.imageConf ? '<img src="'+data.imageConf.url+'" />' : '';
-  template += '<h1>'+data.title+'</h1>';
-  template += data.description ? '<p>'+data.description.replace(/(?:\r\n|\r|\n)/g, '<br/>')+'</p>' : '';
-  template += data.linkAction.action ? '<input data-slide-button-id="'+data.id+'" type="button" class="btn btn-primary" value="'+data.linkLabel ? data.linkLabel : "Continue"+'" />' : '';
-
-  return template;
 }
 
 // Cheking if user changed array order in interface
@@ -101,7 +93,7 @@ function hasArrayChangedOrder (domArray, newArray) {
 }
 
 // Drawing slides according to new array order
-function reDrawAllSlides(data) {
+function reDrawAllSlides(data, widgetId) {
   
   globalSwiper.removeAllSlides();
 
@@ -122,7 +114,6 @@ function updateSlide (data, widgetId, activeSlide) {
   }
 
   var currentSlide = activeSlide !== undefined ? activeSlide : globalSwiper.activeIndex;
-
   
   if ($slidesInDom.length !== data.length) {
     if ($slidesInDom.length > data.length) {
@@ -146,12 +137,12 @@ function updateSlide (data, widgetId, activeSlide) {
   } else { 
     var arrayChanged = hasArrayChangedOrder($slidesInDom, data);
     if (arrayChanged) {
-      reDrawAllSlides(data);
+      reDrawAllSlides(data, widgetId);
     }
   }
 
   _.forEach(data, function(item) {
-    var newTemplate = slideTemplate(item);
+    var newTemplate = template(item);
     $('[data-slider-id='+item.id+']').html(newTemplate);
   });
 
