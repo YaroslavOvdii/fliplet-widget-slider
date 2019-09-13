@@ -1,4 +1,7 @@
-function init(){
+var globalSwiper = {};
+var slideTemplate = Fliplet.Widget.Templates['template.slide'];
+var deletedAllSlides = false;
+function init() {
   $('[data-onboarding-id]').each(function(){
     var container = this;
     var id = $(container).data('onboarding-id');
@@ -29,9 +32,16 @@ function init(){
       }
     });
 
+    //To control multiple sliders on the same screen
+    globalSwiper[id] = swiper;
+
     swiper.update();
 
     $(window).on('resize', function() {
+      swiper.update();
+    });
+
+    Fliplet.Hooks.on('appearanceChanged', function () {
       swiper.update();
     });
 
@@ -62,11 +72,95 @@ function init(){
 
   });
 }
+
+// Cheking if user changed array order in interface
+function hasArrayChangedOrder (domArray, newArray) {
+  var changed = false;
+
+  domArray.each(function(index, element) {
+    if ( element.dataset.sliderId !== newArray[index].id ) {
+      changed = true;
+      return false;
+    }
+  });
+
+  return changed;
+}
+
+// Drawing slides according to new array order
+function reDrawAllSlides(data, widgetId) {
+  
+  globalSwiper[widgetId].removeAllSlides();
+
+  _.forEach(data, function (item) {
+    globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="'+item.id+'"></div>');
+  });
+}
+
+// Main fanction to update and show slides
+function updateSlide (data, widgetId, activeSlide) {
+
+  var $slidesInDom = $('[data-onboarding-id='+widgetId+'] .swiper-container [data-slider-id]');
+
+  // Reload widget build only if we deleted all slides or we init new slider on the same screen or after we deleted all slides and start to add the again
+  if (!globalSwiper[widgetId] || !data.length || deletedAllSlides) {
+    Fliplet.Studio.emit('reload-widget-instance', widgetId);
+    deletedAllSlides = data.length === 0;
+    return;
+  }
+
+  var currentSlide = activeSlide !== undefined ? activeSlide : globalSwiper[widgetId].activeIndex;
+  
+  if ($slidesInDom.length !== data.length) {
+    if ($slidesInDom.length > data.length) {
+      var deletedPosition;
+      $slidesInDom.each(function(index, element) {
+        if (!data[index] || element.dataset.sliderId !== data[index].id) {
+          globalSwiper[widgetId].removeSlide(index);
+          deletedPosition = index;
+          return false;
+        }
+      });
+      if (deletedPosition === ($slidesInDom.length - 1)) {
+        currentSlide = deletedPosition - 1;
+      } else {
+        currentSlide = deletedPosition;
+      }
+    } else {
+      globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="'+data[data.length-1].id+'"></div>');
+      currentSlide = data.length - 1;
+    }
+  } else { 
+    var arrayChanged = hasArrayChangedOrder($slidesInDom, data);
+    if (arrayChanged) {
+      reDrawAllSlides(data, widgetId);
+    }
+  }
+
+  _.forEach(data, function(item) {
+    var newTemplate = slideTemplate(item);
+    $('[data-slider-id='+item.id+']').html(newTemplate);
+  });
+
+  globalSwiper[widgetId].updateAutoHeight(500);
+  globalSwiper[widgetId].slideTo(currentSlide, 500, false);
+}
+
 var debounceLoad = _.debounce(init, 500);
 
 Fliplet.Studio.onEvent(function (event) {
-  if (event.detail.event === 'reload-widget-instance') {
-    debounceLoad();
-  }
+
+  var eventDetail = event.detail;
+
+if (eventDetail.event === 'reload-widget-instance') {
+  debounceLoad();
+  return;
+}
+
+if (eventDetail.type === 'updateSlide') {
+  updateSlide(eventDetail.data, eventDetail.widgetId, eventDetail.index);
+}
+
 });
+
 init();
