@@ -482,7 +482,7 @@ function save(editIndex, notifyComplete) {
         data: data.items,
         widgetId: widgetId,
         index: editIndex
-      })
+      });
     });
   }
 }
