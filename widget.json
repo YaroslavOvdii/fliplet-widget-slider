@@ -31,10 +31,12 @@
       "fliplet-core",
       "bootstrap-css",
       "font-awesome",
+      "handlebars",
       "lodash"
     ],
     "assets": [
       "js/swiper.min.js",
+      "js/build.templates.js",
       "js/build.js",
       "css/swiper.min.css",
       "css/build.css"

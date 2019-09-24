@@ -346,12 +346,16 @@ var FlSlider = (function() {
           var $listItem = $(this).parents('.panel');
           _this.setListItemTitle($listItem.index(), $(this).val());
 
-          debounceSave();
+          save($listItem.index());
         }).on('keyup change blur paste', '.list-item-desc', function() {
-          debounceSave();
+          var $listItem = $(this).parents('.panel');
+
+          save($listItem.index());
         })
         .on('keyup change blur paste', '.list-item-link-label', function() {
-          debounceSave();
+          var $listItem = $(this).parents('.panel');
+
+          save($listItem.index());
         })
         .on('click', '.expand-items', function() {
           var $panelCollapse = $('.panel-collapse.in');
@@ -441,13 +445,11 @@ Fliplet.Widget.onSaveRequest(function() {
   if (imageProvider) {
     imageProvider.forwardSaveRequest();
   } else {
-    save(true);
+    save(false, true);
   }
 });
 
-var debounceSave = _.debounce(save, 500);
-
-function save(notifyComplete) {
+function save(editIndex, notifyComplete) {
   _.forEach(data.items, function(item) {
     item.description = $('#list-item-desc-' + item.id).val();
     item.title = $('#list-item-title-' + item.id).val();
@@ -471,7 +473,12 @@ function save(notifyComplete) {
   } else {
     // Partial save while typing/using the interface
     Fliplet.Widget.save(data).then(function() {
-      Fliplet.Studio.emit('reload-widget-instance', widgetId);
+      Fliplet.Studio.emit('page-preview-send-event', {
+        type: 'updateSlide',
+        data: data.items,
+        widgetId: widgetId,
+        index: editIndex
+      });
     });
   }
 }
