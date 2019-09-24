@@ -97,7 +97,7 @@ function reDrawAllSlides(data, widgetId) {
 }
 
 // Main fanction to update and show slides
-function updateSlide (data, widgetId, activeSlide) {
+function updateSlide(data, widgetId, activeSlide) {
   var $slidesInDom = $('[data-onboarding-id='+widgetId+'] .swiper-container [data-slider-id]');
 
   // Reload widget build only if we deleted all slides or we init new slider on the same screen or after we deleted all slides and start to add the again
