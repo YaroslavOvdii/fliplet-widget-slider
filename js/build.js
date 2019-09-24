@@ -116,7 +116,7 @@ function updateSlide(data, widgetId, activeSlide) {
   } else if ($slidesInDom.length < data.length) {
     globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="'+data[data.length-1].id+'"></div>');
     currentSlide = data.length - 1;
-  }else { 
+  } else { 
     var deletedPosition;
     $slidesInDom.each(function(index, element) {
       if (!data[index] || element.dataset.sliderId !== data[index].id) {
