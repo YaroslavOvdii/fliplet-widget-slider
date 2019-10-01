@@ -160,7 +160,6 @@ var FlSlider = (function() {
       item.linkAction.provId = item.id;
 
       var itemIndex = _.findIndex(data.items, ['id', item.id]);
-
       var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
         // otherwise will be displayed as a full-size iframe overlay
@@ -172,9 +171,7 @@ var FlSlider = (function() {
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
-          }
-
-          if (event === 'widget-data') {
+          } else if (event === 'widget-data') {
             linkSavedFromListener = true;
             linkPromises[itemIndex].forwardSaveRequest();
           }

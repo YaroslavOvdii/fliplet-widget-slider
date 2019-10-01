@@ -148,7 +148,7 @@ function updateSlide(data, widgetId, activeSlide) {
       var image = new Image();
       image.onload = function() {
         resolve();
-      }
+      };
       image.src = data[currentSlide].imageConf.url;
     });
     imageLoad.then(function() {
