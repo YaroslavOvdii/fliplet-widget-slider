@@ -1,4 +1,5 @@
 // VARS
+var linkSavedFromListener = false;
 var widgetId = Fliplet.Widget.getDefaultId();
 var data = Fliplet.Widget.getData() || {
     items: []
@@ -158,6 +159,7 @@ var FlSlider = (function() {
       item.linkAction = item.linkAction || {};
       item.linkAction.provId = item.id;
 
+      var itemIndex = _.findIndex(data.items, ['id', item.id]);
       var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
         // otherwise will be displayed as a full-size iframe overlay
@@ -169,6 +171,9 @@ var FlSlider = (function() {
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
+          } else if (event === 'widget-data') {
+            linkSavedFromListener = true;
+            linkPromises[itemIndex].forwardSaveRequest();
           }
         },
         closeOnSave: false
@@ -176,6 +181,11 @@ var FlSlider = (function() {
 
       linkActionProvider.then(function(data) {
         item.linkAction = data && data.data.action !== 'none' ? data.data : null;
+
+        if (linkSavedFromListener) {
+          save(itemIndex);
+        }
+
         return Promise.resolve();
       });
 
@@ -248,11 +258,13 @@ var FlSlider = (function() {
         text: 'Select & Save'
       });
 
+      var editIndex = _.findIndex(data.items, ['id', item.id]);
+
       imageProvider.then(function(data) {
         if (data.data) {
           item.imageConf = data.data;
           $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data.thumbnail);
-          save();
+          save(editIndex);
         }
         imageProvider = null;
         Fliplet.Studio.emit('widget-save-label-reset');
@@ -467,6 +479,7 @@ function save(editIndex, notifyComplete) {
     });
 
     // forward save request to all providers
+    linkSavedFromListener = false;
     linkPromises.forEach(function(promise) {
       promise.forwardSaveRequest();
     });

@@ -138,8 +138,23 @@ function updateSlide(data, widgetId, activeSlide) {
     $('[data-slider-id='+item.id+']').html(newTemplate);
   });
 
-  globalSwiper[widgetId].updateAutoHeight(500);
   globalSwiper[widgetId].slideTo(currentSlide, 500, false);
+  globalSwiper[widgetId].updateAutoHeight(0);
+
+  if (data[currentSlide].imageConf) {
+    // This is needed to update slide size when we adding an image
+    // Wait until image is loaded and then update height one more time
+    var imageLoad = new Promise(function(resolve, reject) {
+      var image = new Image();
+      image.onload = function() {
+        resolve();
+      };
+      image.src = data[currentSlide].imageConf.url;
+    });
+    imageLoad.then(function() {
+      globalSwiper[widgetId].updateAutoHeight();
+    });
+  }
 }
 
 var debounceLoad = _.debounce(init, 500);
