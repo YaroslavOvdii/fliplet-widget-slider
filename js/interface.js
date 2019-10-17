@@ -171,9 +171,14 @@ var FlSlider = (function() {
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
             Fliplet.Widget.toggleSaveButton(data.isValid === true);
-          } else if (event === 'widget-data') {
+          } else if (event === 'widget-changed') {
             linkSavedFromListener = true;
-            linkPromises[itemIndex].forwardSaveRequest();
+            if (!linkPromises[itemIndex] || linkPromises[itemIndex].id !== item.id) {
+              var linkItemIndex = _.findIndex(linkPromises, ['id', item.id]);
+              linkPromises[linkItemIndex].forwardSaveRequest();
+            } else {
+              linkPromises[itemIndex].forwardSaveRequest();
+            }
           }
         },
         closeOnSave: false
