@@ -99,8 +99,7 @@ function reDrawAllSlides(data, widgetId) {
 // Main fanction to update and show slides
 function updateSlide(data, widgetId, activeSlide) {
   // When we open interface we have 2 data-onboarding-id elements that's why we take only first of them.
-  var onBording = $('[data-onboarding-id='+widgetId+']')[0];
-  var $slidesInDom = $(onBording).find('.swiper-container [data-slider-id]');
+  var $slidesInDom = $('[data-onboarding-id='+widgetId+']:eq(0)').find('.swiper-container [data-slider-id]');
 
   // Reload widget build only if we deleted all slides or we init new slider on the same screen or after we deleted all slides and start to add the again
   if (!globalSwiper[widgetId] || !data.length || deletedAllSlides) {
