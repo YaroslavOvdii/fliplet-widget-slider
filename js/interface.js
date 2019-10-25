@@ -232,10 +232,17 @@ var FlSlider = (function() {
     },
 
     initImageProvider: function(item) {
-      imageProvider = Fliplet.Widget.open('com.fliplet.image-manager', {
+      var filePickerData = {
+        selectFiles: item.imageConf ? [item.imageConf] : [],
+        selectMultiple: false,
+        type: 'image',
+        autoSelectOnUpload: true
+      };
+
+      imageProvider = Fliplet.Widget.open('com.fliplet.file-picker', {
         // Also send the data I have locally, so that
         // the interface gets repopulated with the same stuff
-        data: item.imageConf,
+        data: filePickerData,
         // Events fired from the provider
         onEvent: function(event, data) {
           if (event === 'interface-validate') {
@@ -267,8 +274,8 @@ var FlSlider = (function() {
 
       imageProvider.then(function(data) {
         if (data.data) {
-          item.imageConf = data.data;
-          $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data.thumbnail);
+          item.imageConf = data.data[0];
+          $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data[0].thumbnail);
           save(editIndex);
         }
         imageProvider = null;
