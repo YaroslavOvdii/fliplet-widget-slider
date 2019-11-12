@@ -259,10 +259,13 @@ var FlSlider = (function() {
         if (event.data === 'cancel-button-pressed') {
           Fliplet.Widget.toggleCancelButton(true);
           imageProvider.close();
+          
           if (_.isEmpty(item.imageConf)) {
             $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
             $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
+
+          imageProvider = null;
         }
       });
 
