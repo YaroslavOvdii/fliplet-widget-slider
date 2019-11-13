@@ -7,6 +7,9 @@ var data = Fliplet.Widget.getData() || {
   linkPromises = [],
   imageProvider;
 
+var page = Fliplet.Widget.getPage();
+var omitPages = page ? [page.id] : [];
+
 // DEFAULTS
 data.items = data.items || [];
 
@@ -158,6 +161,7 @@ var FlSlider = (function() {
 
       item.linkAction = item.linkAction || {};
       item.linkAction.provId = item.id;
+      item.linkAction.omitPages = omitPages;
 
       var itemIndex = _.findIndex(data.items, ['id', item.id]);
       var linkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
@@ -205,6 +209,7 @@ var FlSlider = (function() {
       }
 
       data.skipLinkAction = data.skipLinkAction || {};
+      data.skipLinkAction.omitPages = omitPages;
 
       var skipLinkActionProvider = Fliplet.Widget.open('com.fliplet.link', {
         // If provided, the iframe will be appended here,
@@ -259,12 +264,12 @@ var FlSlider = (function() {
         if (event.data === 'cancel-button-pressed') {
           Fliplet.Widget.toggleCancelButton(true);
           imageProvider.close();
-          
+
           if (_.isEmpty(item.imageConf)) {
             $('[data-id="' + item.id + '"] .add-image-holder').find('.add-image').text('Add image');
             $('[data-id="' + item.id + '"] .add-image-holder').find('.thumb-holder').addClass('hidden');
           }
-          
+
           Fliplet.Widget.resetSaveButtonLabel();
           imageProvider = null;
         }
