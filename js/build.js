@@ -18,7 +18,7 @@
     });
   }
 
-  Fliplet.Widget.instance('onboarding', function (data) {
+  Fliplet.Widget.instance('slider', function (data) {
     var $container = $(this);
     var deletedAllSlides = false;
 
