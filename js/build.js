@@ -23,21 +23,23 @@
     var deletedAllSlides = false;
 
     function authenticateImages(onImageLoad) {
-      _.forEach(data.items, function (item) {
-        if (!_.get(item, 'imageConf.url') || !Fliplet.Media.isRemoteUrl(item.imageConf.url)) {
-          return;
-        }
+      return Fliplet().then(function () {
+        _.forEach(data.items, function (item) {
+          if (!_.get(item, 'imageConf.url') || !Fliplet.Media.isRemoteUrl(item.imageConf.url)) {
+            return;
+          }
 
-        var $img = $('<img />');
+          var $img = $('<img />');
 
-        $container.find('.swiper-slide[data-slider-id="' + item.id + '"] .swiper-slide-image')
-          .attr('src', Fliplet.Media.authenticate(item.imageConf.url));
+          $container.find('.swiper-slide[data-slide-id="' + item.id + '"] .swiper-slide-image')
+            .attr('src', Fliplet.Media.authenticate(item.imageConf.url));
 
-        if (typeof onImageLoad === 'function') {
-          $img.on('load', onImageLoad);
-        }
+          if (typeof onImageLoad === 'function') {
+            $img.on('load', onImageLoad);
+          }
 
-        $img.attr('src', Fliplet.Media.authenticate(item.imageConf.url));
+          $img.attr('src', Fliplet.Media.authenticate(item.imageConf.url));
+        });
       });
     }
 
@@ -174,21 +176,19 @@
 
     var debounceLoad = _.debounce(init, 500);
 
-    Fliplet().then(function () {
-      Fliplet.Studio.onEvent(function (event) {
-        var eventDetail = event.detail;
+    Fliplet.Studio.onEvent(function (event) {
+      var eventDetail = event.detail;
 
-        if (eventDetail.event === 'reload-widget-instance') {
-          debounceLoad();
-          return;
-        }
+      if (eventDetail.event === 'reload-widget-instance') {
+        debounceLoad();
+        return;
+      }
 
-        if (eventDetail.type === 'updateSlide') {
-          updateSlide(eventDetail.data, eventDetail.widgetId, eventDetail.index);
-        }
-      });
-
-      init();
+      if (eventDetail.type === 'updateSlide') {
+        updateSlide(eventDetail.data, eventDetail.widgetId, eventDetail.index);
+      }
     });
+
+    init();
   });
 })();

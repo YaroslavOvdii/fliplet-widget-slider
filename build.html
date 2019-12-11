@@ -9,7 +9,7 @@
     <div class="swiper-container">
       <div class="swiper-wrapper {{#if animationEnabled}}animated{{/if}}">
         {{#each items}}
-        <div class="swiper-slide" data-slider-id="{{id}}">
+        <div class="swiper-slide" data-slide-id="{{id}}">
           {{#if imageConf}}
           <img class="swiper-slide-image" src="{{imageConf.url}}" /> {{/if}}
           <h1>{{title}}</h1> {{#if description}}
