@@ -11,7 +11,7 @@
         {{#each items}}
         <div class="swiper-slide" data-slider-id="{{id}}">
           {{#if imageConf}}
-          <img src="{{imageConf.url}}" /> {{/if}}
+          <img class="swiper-slide-image" src="{{imageConf.url}}" /> {{/if}}
           <h1>{{title}}</h1> {{#if description}}
           <p>{{nl2br description}}</p>{{/if}} {{#if linkAction.action}}<input data-slide-button-id="{{id}}" type="button" class="btn btn-primary" value="{{#if linkLabel}}{{linkLabel}}{{else}}Continue{{/if}}" />{{/if}}
         </div>
