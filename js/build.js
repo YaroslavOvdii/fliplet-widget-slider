@@ -44,7 +44,7 @@
     }
 
     function init() {
-      var id = $container.data('onboarding-id');
+      var id = data.id;
       var swiperElement = $container.find('.swiper-container');
       var swiper = new Swiper(swiperElement, {
         direction: 'horizontal',
@@ -110,8 +110,8 @@
 
     // Main fanction to update and show slides
     function updateSlide(data, widgetId, activeSlide) {
-      // When we open interface we have 2 data-onboarding-id elements that's why we take only first of them.
-      var $slidesInDom = $('[data-onboarding-id='+widgetId+']:eq(0)').find('.swiper-container [data-slider-id]');
+      // When we open interface we have 2 data-slider-id elements that's why we take only first of them.
+      var $slidesInDom = $('[data-slider-id='+widgetId+']:eq(0)').find('.swiper-container [data-slider-id]');
 
       // Reload widget build only if we deleted all slides or we init new slider on the same screen or after we deleted all slides and start to add the again
       if (!globalSwiper[widgetId] || !data.length || deletedAllSlides) {
