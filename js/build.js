@@ -29,10 +29,7 @@
             return;
           }
 
-          var $img = $('<img />');
-
-          $container.find('.swiper-slide[data-slide-id="' + item.id + '"] .swiper-slide-image')
-            .attr('src', Fliplet.Media.authenticate(item.imageConf.url));
+          var $img = $container.find('.swiper-slide[data-slide-id="' + item.id + '"] .swiper-slide-image');
 
           if (typeof onImageLoad === 'function') {
             $img.on('load', onImageLoad);
