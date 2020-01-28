@@ -1,0 +1,26 @@
+{
+  "name": "fliplet-widget-slider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint-config-fliplet": "github:YaroslavOvdii/FlipletEsLint"
+  },
+  "dependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YaroslavOvdii/fliplet-widget-slider.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YaroslavOvdii/fliplet-widget-slider/issues"
+  },
+  "homepage": "https://github.com/YaroslavOvdii/fliplet-widget-slider#readme"
+}

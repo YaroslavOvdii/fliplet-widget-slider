@@ -1,4 +1,4 @@
-(function () {
+(function() {
   var globalSwiper = {};
   var slideTemplate = Fliplet.Widget.Templates['template.slide'];
 
@@ -6,25 +6,25 @@
   function reDrawAllSlides(data, widgetId) {
     globalSwiper[widgetId].removeAllSlides();
 
-    _.forEach(data, function (item) {
-      globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="'+item.id+'"></div>');
+    _.forEach(data, function(item) {
+      globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="' + item.id + '"></div>');
     });
   }
 
   // Cheking if user changed array order in interface
   function hasArrayChangedOrder(domArray, newArray) {
-    return _.some(domArray, function (element, index) {
+    return _.some(domArray, function(element, index) {
       return element.dataset.sliderId !== newArray[index].id;
     });
   }
 
-  Fliplet.Widget.instance('slider', function (data) {
+  Fliplet.Widget.instance('slider', function(data) {
     var $container = $(this);
     var deletedAllSlides = false;
 
     function authenticateImages(onImageLoad) {
-      return Fliplet().then(function () {
-        _.forEach(data.items, function (item) {
+      return Fliplet().then(function() {
+        _.forEach(data.items, function(item) {
           if (!_.get(item, 'imageConf.url') || !Fliplet.Media.isRemoteUrl(item.imageConf.url)) {
             return;
           }
@@ -52,7 +52,7 @@
         nextButton: '.swiper-button-next-' + id,
         prevButton: '.swiper-button-prev-' + id,
         grabCursor: true,
-        onSlideChangeEnd: function () {
+        onSlideChangeEnd: function() {
           /**
            * get current page context if any
            */
@@ -68,7 +68,7 @@
         }
       });
 
-      //To control multiple sliders on the same screen
+      // To control multiple sliders on the same screen
       globalSwiper[id] = swiper;
 
       authenticateImages(swiper.update);
@@ -78,26 +78,26 @@
         swiper.update();
       });
 
-      Fliplet.Hooks.on('appearanceChanged', function () {
+      Fliplet.Hooks.on('appearanceChanged', function() {
         swiper.update();
       });
 
-      Fliplet.Hooks.on('restorePageContext', function (pageContext) {
-        if(pageContext && pageContext[id]){
+      Fliplet.Hooks.on('restorePageContext', function(pageContext) {
+        if (pageContext && pageContext[id]) {
           swiper.slideTo(pageContext[id]);
         }
       });
 
-      $container.find('.ob-skip span').click(function () {
+      $container.find('.ob-skip span').click(function() {
         if (_.get(data, 'skipLinkAction') && !_.isEmpty(data.skipLinkAction)) {
           Fliplet.Navigate.to(data.skipLinkAction);
         }
       });
 
-      $container.find('.btn[data-slide-button-id]').click(function (event) {
+      $container.find('.btn[data-slide-button-id]').click(function(event) {
         event.preventDefault();
 
-        var itemData = _.find(data.items,{id: $(this).data('slide-button-id')});
+        var itemData = _.find(data.items, {id: $(this).data('slide-button-id')});
 
         if (_.get(itemData, 'linkAction') && !_.isEmpty(itemData.linkAction)) {
           Fliplet.Navigate.to(itemData.linkAction);
@@ -108,7 +108,7 @@
     // Main fanction to update and show slides
     function updateSlide(data, widgetId, activeSlide) {
       // When we open interface we have 2 data-slider-id elements that's why we take only first of them.
-      var $slidesInDom = $('[data-slider-id='+widgetId+']:eq(0)').find('.swiper-container [data-slider-id]');
+      var $slidesInDom = $('[data-slider-id=' + widgetId + ']:eq(0)').find('.swiper-container [data-slider-id]');
 
       // Reload widget build only if we deleted all slides or we init new slider on the same screen or after we deleted all slides and start to add the again
       if (!globalSwiper[widgetId] || !data.length || deletedAllSlides) {
@@ -117,14 +117,14 @@
         return;
       }
 
-      var currentSlide = activeSlide !== undefined ? activeSlide : globalSwiper[widgetId].activeIndex;
+      var currentSlide = !activeSlide ? activeSlide : globalSwiper[widgetId].activeIndex;
 
       if ($slidesInDom.length === data.length) {
         if (hasArrayChangedOrder($slidesInDom, data)) {
           reDrawAllSlides(data, widgetId);
         }
       } else if ($slidesInDom.length < data.length) {
-        globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="'+data[data.length-1].id+'"></div>');
+        globalSwiper[widgetId].appendSlide('<div class="swiper-slide" data-slider-id="' + data[data.length - 1].id + '"></div>');
         currentSlide = data.length - 1;
       } else {
         var deletedPosition;
@@ -147,7 +147,7 @@
       _.forEach(data, function(item) {
         var newTemplate = slideTemplate(item);
 
-        $('[data-slider-id='+item.id+']').html(newTemplate);
+        $('[data-slider-id=' + item.id + ']').html(newTemplate);
       });
 
       globalSwiper[widgetId].slideTo(currentSlide, 500, false);
@@ -156,7 +156,7 @@
       if (data[currentSlide].imageConf) {
         // This is needed to update slide size when we adding an image
         // Wait until image is loaded and then update height one more time
-        var imageLoad = new Promise(function(resolve, reject) {
+        var imageLoad = new Promise(function(resolve) {
           var image = new Image();
 
           image.onload = function() {
@@ -173,7 +173,7 @@
 
     var debounceLoad = _.debounce(init, 500);
 
-    Fliplet.Studio.onEvent(function (event) {
+    Fliplet.Studio.onEvent(function(event) {
       var eventDetail = event.detail;
 
       if (eventDetail.event === 'reload-widget-instance') {
