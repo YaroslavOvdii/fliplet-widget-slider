@@ -12,10 +12,6 @@
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/YaroslavOvdii/fliplet-widget-slider/issues"
-  },
-  "homepage": "https://github.com/YaroslavOvdii/fliplet-widget-slider#readme",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-fliplet": "^0.5.0"
