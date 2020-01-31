@@ -2,10 +2,10 @@
 var linkSavedFromListener = false;
 var widgetId = Fliplet.Widget.getDefaultId();
 var data = Fliplet.Widget.getData() || {
-    items: []
-  },
-  linkPromises = [],
-  imageProvider;
+  items: []
+};
+var linkPromises = [];
+var imageProvider;
 
 var page = Fliplet.Widget.getPage();
 var omitPages = page ? [page.id] : [];
@@ -14,18 +14,18 @@ var omitPages = page ? [page.id] : [];
 data.items = data.items || [];
 
 var FlSlider = (function() {
-
   var accordionCollapsed = false;
 
   var $accordionContainer = $('#accordion');
 
 
   function makeid(length) {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < length; i++)
+    for (var i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
     return text;
   }
@@ -58,9 +58,10 @@ var FlSlider = (function() {
     // Public functions
     constructor: FlSlider,
     setupSortable: function() {
+      // eslint-disable-next-line no-unused-vars
       var $sortable = $('.panel-group').sortable({
-        handle: ".panel-heading",
-        cancel: ".icon-delete",
+        handle: '.panel-heading',
+        cancel: '.icon-delete',
         tolerance: 'pointer',
         revert: 150,
         placeholder: 'panel panel-default placeholder tile',
@@ -74,7 +75,7 @@ var FlSlider = (function() {
         stop: function(event, ui) {
           ui.item.removeClass('focus');
 
-          var sortedIds = $(".panel-group").sortable("toArray", {
+          var sortedIds = $('.panel-group').sortable('toArray', {
             attribute: 'data-id'
           });
           data.items = _.sortBy(data.items, function(item) {
@@ -83,7 +84,7 @@ var FlSlider = (function() {
           save();
           $('.panel').not(ui.item).removeClass('faded');
         },
-        sort: function(event, ui) {
+        sort: function() {
           $('.panel-group').sortable('refresh');
           $('.tab-content').trigger('scroll');
         }
@@ -92,40 +93,40 @@ var FlSlider = (function() {
     },
 
     loadAnimationToggle: function() {
-      if (typeof data.animationEnabled != "undefined") {
+      if (typeof data.animationEnabled !== 'undefined') {
         if (data.animationEnabled) {
-          $('#enable-animation-yes').prop("checked", true);
+          $('#enable-animation-yes').prop('checked', true);
         } else {
-          $('#enable-animation-no').prop("checked", true);
+          $('#enable-animation-no').prop('checked', true);
         }
       } else {
-        $('#enable-animation-yes').prop("checked", true);
+        $('#enable-animation-yes').prop('checked', true);
       }
       _this.enableAnimation();
     },
 
     loadNavigationToggle: function() {
-      if (typeof data.navigationEnabled != "undefined") {
+      if (typeof data.navigationEnabled !== 'undefined') {
         if (data.navigationEnabled) {
-          $('#enable-navigation-yes').prop("checked", true);
+          $('#enable-navigation-yes').prop('checked', true);
         } else {
-          $('#enable-navigation-no').prop("checked", true);
+          $('#enable-navigation-no').prop('checked', true);
         }
       } else {
-        $('#enable-navigation-no').prop("checked", true);
+        $('#enable-navigation-no').prop('checked', true);
       }
       _this.enableNavigation();
     },
 
     loadSkipToggle: function() {
-      if (typeof data.skipEnabled != "undefined") {
+      if (typeof data.skipEnabled !== 'undefined') {
         if (data.skipEnabled) {
-          $('#enable-skip-yes').prop("checked", true);
+          $('#enable-skip-yes').prop('checked', true);
         } else {
-          $('#enable-skip-no').prop("checked", true);
+          $('#enable-skip-no').prop('checked', true);
         }
       } else {
-        $('#enable-skip-no').prop("checked", true);
+        $('#enable-skip-no').prop('checked', true);
       }
       _this.enableSkipButton();
     },
@@ -158,7 +159,6 @@ var FlSlider = (function() {
     },
 
     initItemLinkProvider: function(item) {
-
       item.linkAction = item.linkAction || {};
       item.linkAction.provId = item.id;
       item.linkAction.omitPages = omitPages;
@@ -284,7 +284,7 @@ var FlSlider = (function() {
       imageProvider.then(function(data) {
         if (data.data) {
           item.imageConf = data.data[0];
-          $('[data-id="' + item.id + '"] .thumb-image img').attr("src", data.data[0].thumbnail);
+          $('[data-id="' + item.id + '"] .thumb-image img').attr('src', data.data[0].thumbnail);
           save(editIndex);
         }
         imageProvider = null;
@@ -331,9 +331,8 @@ var FlSlider = (function() {
     attachObservers: function() {
       _this.$tabcontent
         .on('click', '.icon-delete', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id');
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
 
           _.remove(data.items, {
             id: id
@@ -346,15 +345,13 @@ var FlSlider = (function() {
           _this.checkPanelLength();
           _this.listLength--;
           save();
-
         })
         .on('click', '.add-image', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id'),
-            item = _.find(data.items, {
-              id: id
-            });
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
+          var item = _.find(data.items, {
+            id: id
+          });
 
           _this.initImageProvider(item);
 
@@ -364,12 +361,11 @@ var FlSlider = (function() {
           }
         })
         .on('click', '.image-remove', function() {
-
-          var $item = $(this).closest("[data-id], .panel"),
-            id = $item.data('id'),
-            item = _.find(data.items, {
-              id: id
-            });
+          var $item = $(this).closest('[data-id], .panel');
+          var id = $item.data('id');
+          var item = _.find(data.items, {
+            id: id
+          });
 
           item.imageConf = null;
           $(this).parents('.add-image-holder').find('.add-image').text('Add image');
@@ -396,7 +392,7 @@ var FlSlider = (function() {
           // Update accordionCollapsed if all panels are collapsed/expanded
           if (!$panelCollapse.length) {
             accordionCollapsed = true;
-          } else if ($panelCollapse.length == $('.panel-collapse').length) {
+          } else if ($panelCollapse.length === $('.panel-collapse').length) {
             accordionCollapsed = false;
           }
 
@@ -407,12 +403,11 @@ var FlSlider = (function() {
           }
         })
         .on('click', '.new-list-item', function() {
-
           var item = {};
           item.id = makeid(8);
           item.number = _this.listLength++;
           item.linkAction = null;
-          item.description = "";
+          item.description = '';
           data.items.push(item);
 
           _this.addListItem(item);
@@ -420,7 +415,6 @@ var FlSlider = (function() {
 
           _this.checkPanelLength();
           save();
-
         })
         .on('show.bs.collapse', '.panel-collapse', function() {
           // Get item ID / Get provider / Get item
@@ -456,7 +450,7 @@ var FlSlider = (function() {
       var contentHeight = $('body > .form-horizontal').outerHeight();
       var tabPaneTopPadding = 78;
 
-      $('body > .form-horizontal').scroll(function(event) {
+      $('body > .form-horizontal').scroll(function() {
         var tabContentScrollPos = Math.abs($('.tab-pane-content').position().top - tabPaneTopPadding);
         var tabPaneHeight = tabPaneTopPadding + $('.tab-pane-content').height();
 
@@ -473,6 +467,7 @@ var FlSlider = (function() {
   return FlSlider;
 })();
 
+// eslint-disable-next-line no-unused-vars
 var flSlider = new FlSlider(data);
 
 Fliplet.Widget.onSaveRequest(function() {
