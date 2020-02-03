@@ -78,7 +78,7 @@
 }
 
 .swiper-container {
-	width: 100%;
+	width: 100vw;
 }
 
 .swiper-wrapper {
@@ -130,12 +130,14 @@
 }
 
 .onboarding-content .swiper-button-prev {
-	left: 0;
+	/* Using 10px so the arrow wouldn't hide behind the edge */
+	left: 10px;
 	text-align: left;
 }
 
 .onboarding-content .swiper-button-next {
-	right: 0;
+	/* Using 10px so the arrow wouldn't hide behind the edge */
+	right: 10px;
 	text-align: right;
 }
 
