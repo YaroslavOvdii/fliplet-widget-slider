@@ -22,6 +22,13 @@
     var $container = $(this);
     var deletedAllSlides = false;
 
+    // Setting container parent max-width to 100% so that the swiper library set correct slide width
+    // To work with old D&D
+    $container.parents('.column-item').css('maxWidth', '100%')
+
+    // To work with new D&D
+    $container.parent().css('maxWidth', '100%');
+
     function authenticateImages(onImageLoad) {
       return Fliplet().then(function() {
         _.forEach(data.items, function(item) {
@@ -187,5 +194,8 @@
     });
 
     init();
+
+    // Trigger resize event so that the library set correct slide width according to the $container
+    $(window).trigger('resize');
   });
 })();
